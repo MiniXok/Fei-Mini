@@ -1,0 +1,80 @@
+{
+  "connection": {
+    "cold_median_ms": 0.054,
+    "warm_median_ms": 0.001
+  },
+  "schema": {
+    "cold_introspection_ms": 0.387,
+    "cached_access_ms": 0.004
+  },
+  "query_plan": [
+    "SEARCH _l USING INDEX idx_customers_city (city=?)",
+    "SEARCH _r USING INDEX idx_orders_cust (cust_id=?)"
+  ],
+  "scale_benchmarks": [
+    {
+      "scale_rows": 100,
+      "workload": "Indexed Filter",
+      "median_ms": 0.164,
+      "p90_ms": 0.229,
+      "compile_us": 3.75,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 100,
+      "workload": "Indexed Join-Sum-Limit",
+      "median_ms": 0.213,
+      "p90_ms": 0.296,
+      "compile_us": 18.74,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 1000,
+      "workload": "Indexed Filter",
+      "median_ms": 0.411,
+      "p90_ms": 0.443,
+      "compile_us": 2.56,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 1000,
+      "workload": "Indexed Join-Sum-Limit",
+      "median_ms": 0.267,
+      "p90_ms": 0.28,
+      "compile_us": 16.08,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 10000,
+      "workload": "Indexed Filter",
+      "median_ms": 1.738,
+      "p90_ms": 2.053,
+      "compile_us": 3.23,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 10000,
+      "workload": "Indexed Join-Sum-Limit",
+      "median_ms": 0.871,
+      "p90_ms": 0.924,
+      "compile_us": 18.17,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 100000,
+      "workload": "Indexed Filter",
+      "median_ms": 1.593,
+      "p90_ms": 1.662,
+      "compile_us": 2.89,
+      "peak_ram_mb": 403.15
+    },
+    {
+      "scale_rows": 100000,
+      "workload": "Indexed Join-Sum-Limit",
+      "median_ms": 7.677,
+      "p90_ms": 8.384,
+      "compile_us": 16.82,
+      "peak_ram_mb": 403.15
+    }
+  ]
+}

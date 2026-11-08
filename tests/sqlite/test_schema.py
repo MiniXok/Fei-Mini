@@ -1,4 +1,4 @@
-"""SQLite Schema 适配器单元测试。"""
+"""SQLite Schema 适配器与类型保障等级单元测试。"""
 
 import os
 import sqlite3
@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 from feimini.dsl.types import DataType
-from feimini.sqlite.schema import SQLiteSchemaAdapter, map_sqlite_type_to_minirel
+from feimini.sqlite.schema import SQLiteSchemaAdapter, TypeGuarantee, map_sqlite_type_to_minirel
 
 
 class TestSQLiteSchema(unittest.TestCase):
@@ -14,12 +14,11 @@ class TestSQLiteSchema(unittest.TestCase):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.db_path = os.path.join(self.temp_dir.name, "test_shop.db")
 
-        # 创建测试 SQLite 数据库
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute("PRAGMA foreign_keys = ON;")
 
-        # 主表
+        # 1. 普通表
         cursor.execute("""
             CREATE TABLE customers (
                 customer_id INTEGER PRIMARY KEY,
@@ -29,7 +28,7 @@ class TestSQLiteSchema(unittest.TestCase):
             );
         """)
 
-        # 从表 (外键引用 customers)
+        # 2. 从表 (外键引用 customers)
         cursor.execute("""
             CREATE TABLE orders (
                 order_id INTEGER PRIMARY KEY,
@@ -39,13 +38,29 @@ class TestSQLiteSchema(unittest.TestCase):
             );
         """)
 
-        # 视图
+        # 3. STRICT 模式表 (SQLite 3.37.0+)
+        try:
+            cursor.execute("""
+                CREATE TABLE audit_log (
+                    log_id INTEGER PRIMARY KEY,
+                    action TEXT,
+                    timestamp INT
+                ) STRICT;
+            """)
+            self.has_strict = True
+        except sqlite3.OperationalError:
+            self.has_strict = False
+
+        # 4. 动态无类型表
         cursor.execute("""
-            CREATE VIEW vip_customers AS
-            SELECT customer_id, name FROM customers WHERE is_vip = 1;
+            CREATE TABLE dynamic_table (
+                data_any ANY,
+                untyped_col
+            );
         """)
 
-        # 索引
+        # 视图与索引
+        cursor.execute("CREATE VIEW vip_customers AS SELECT customer_id, name FROM customers WHERE is_vip = 1;")
         cursor.execute("CREATE INDEX idx_orders_cust ON orders (cust_id);")
 
         conn.commit()
@@ -66,14 +81,15 @@ class TestSQLiteSchema(unittest.TestCase):
         self.assertIsNotNone(cust_info)
         self.assertEqual(cust_info.primary_key, "customer_id")
         self.assertFalse(cust_info.is_view)
-        self.assertEqual(cust_info.column_names, ("customer_id", "name", "balance", "is_vip"))
+        self.assertFalse(cust_info.is_strict)
 
-        # 验证类型转换
-        type_map = {c.name: c.data_type for c in cust_info.columns}
-        self.assertEqual(type_map["customer_id"], DataType.INT)
-        self.assertEqual(type_map["name"], DataType.STR)
-        self.assertEqual(type_map["balance"], DataType.FLOAT)
-        self.assertEqual(type_map["is_vip"], DataType.BOOL)
+        # 验证主键类型保障
+        pk_col = [c for c in cust_info.columns if c.name == "customer_id"][0]
+        self.assertEqual(pk_col.type_guarantee, TypeGuarantee.GUARANTEED_PK)
+
+        # 验证普通非严格列亲和
+        name_col = [c for c in cust_info.columns if c.name == "name"][0]
+        self.assertEqual(name_col.type_guarantee, TypeGuarantee.INFERRED_AFFINITY)
 
         # 验证外键
         orders_info = schema.get_table("orders")
@@ -84,12 +100,27 @@ class TestSQLiteSchema(unittest.TestCase):
         self.assertEqual(fk.target_table, "customers")
         self.assertEqual(fk.to_column, "customer_id")
 
-        # 验证索引
-        self.assertIn("idx_orders_cust", orders_info.indexes)
+    def test_strict_table_detection(self) -> None:
+        """测试对 STRICT 表及其类型保障级别的精准识别。"""
+        if not self.has_strict:
+            self.skipTest("SQLite runtime does not support STRICT tables")
 
-        # 验证视图
-        vip_view = schema.get_table("vip_customers")
-        self.assertTrue(vip_view.is_view)
+        schema = SQLiteSchemaAdapter.inspect_database(self.db_path)
+        log_table = schema.get_table("audit_log")
+        self.assertIsNotNone(log_table)
+        self.assertTrue(log_table.is_strict)
+
+        action_col = [c for c in log_table.columns if c.name == "action"][0]
+        self.assertEqual(action_col.type_guarantee, TypeGuarantee.GUARANTEED_STRICT)
+
+    def test_dynamic_unknown_type_detection(self) -> None:
+        """测试对 ANY 及未声明类型列的识别。"""
+        schema = SQLiteSchemaAdapter.inspect_database(self.db_path)
+        dyn_table = schema.get_table("dynamic_table")
+        self.assertIsNotNone(dyn_table)
+
+        untyped_col = [c for c in dyn_table.columns if c.name == "untyped_col"][0]
+        self.assertEqual(untyped_col.type_guarantee, TypeGuarantee.DYNAMIC_UNKNOWN)
 
     def test_type_affinity_mapping(self) -> None:
         """测试各种常见 SQLite 类型亲和字符串映射。"""

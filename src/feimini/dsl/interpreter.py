@@ -199,8 +199,13 @@ class MiniRelInterpreter:
             src_table = self._eval_node(node.source, database)
             col_idx = src_table.schema.index_of(node.sort_col)
             reverse = node.direction == SortDirection.DESC
-            # 使用 Python 稳定的 Timsort 保证确定性
-            sorted_rows = sorted(src_table.rows, key=lambda r: r[col_idx], reverse=reverse)
+            # 使用 Python 稳定的 Timsort 保证确定性，同时与 SQLite NULL 排序语义完全对齐
+            # (NULL 在 ASC 下排最前，在 DESC 下排最后)
+            def _sort_key(r: Tuple[Any, ...]) -> Tuple[bool, Any]:
+                val = r[col_idx]
+                return (val is not None, val if val is not None else 0)
+
+            sorted_rows = sorted(src_table.rows, key=_sort_key, reverse=reverse)
             return Table(schema=src_table.schema, rows=tuple(sorted_rows))
 
         elif isinstance(node, LimitNode):

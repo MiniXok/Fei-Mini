@@ -1,6 +1,7 @@
 """SQLite 适配器、编译器与只读执行后端模块。"""
 
 from .schema import (
+    TypeGuarantee,
     SQLiteColumnInfo,
     SQLiteForeignKeyInfo,
     SQLiteTableInfo,
@@ -21,8 +22,13 @@ from .backend import (
     SQLiteQueryResult,
     SQLiteExecutionBackend,
 )
+from .pipeline import (
+    PipelineExecutionResult,
+    SQLiteAssistantPipeline,
+)
 
 __all__ = [
+    "TypeGuarantee",
     "SQLiteColumnInfo",
     "SQLiteForeignKeyInfo",
     "SQLiteTableInfo",
@@ -38,4 +44,6 @@ __all__ = [
     "SQLiteTimeoutError",
     "SQLiteQueryResult",
     "SQLiteExecutionBackend",
+    "PipelineExecutionResult",
+    "SQLiteAssistantPipeline",
 ]
