@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated datasets with hidden evaluation instances
+datasets/train/
+datasets/dev/
+datasets/test/
+!datasets/test_manifest.json
+
+# Raw evaluation execution traces
+results/raw/
+
+# Editor artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
