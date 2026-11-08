@@ -25,9 +25,11 @@ class LearnedSearchSolver(BaseSolver):
         name: str = "learned_ranker",
         checkpoint_path: str = "checkpoints/mlp_ranker_v2.npz",
         grammar: Optional[MiniRelGrammar] = None,
+        use_cache: bool = True,
     ) -> None:
         super().__init__(name=name)
         self.grammar = grammar or DEFAULT_GRAMMAR
+        self.use_cache = use_cache
         self.scorer = LearnedScorer(checkpoint_path=checkpoint_path)
         self.verifier = ProgramVerifier()
         self.generator = ExhaustiveSearchSolver(grammar=self.grammar)
@@ -41,7 +43,9 @@ class LearnedSearchSolver(BaseSolver):
 
         # 2. 神经网络推理打分 (向量化并行评分)
         t_infer_start = time.perf_counter()
-        scored_candidates = self.scorer.score_candidates_batch(candidates_raw, task)
+        scored_candidates = self.scorer.score_candidates_batch(
+            candidates_raw, task, use_cache=self.use_cache
+        )
         inference_time = time.perf_counter() - t_infer_start
 
         candidates_gen = 0

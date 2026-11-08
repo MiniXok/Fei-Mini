@@ -1,0 +1,15 @@
+{
+  "total_samples": 4500,
+  "positive_samples": 500,
+  "negative_samples": 4000,
+  "unique_feature_vectors": 1337,
+  "duplicate_feature_vectors": 3163,
+  "feature_label_conflicts": 91,
+  "false_negative_rate_estimated": 0.0,
+  "false_negatives_found": 0,
+  "checked_negatives": 249,
+  "task_grouped_val_tasks": 100,
+  "task_grouped_val_samples": 900,
+  "task_grouped_val_accuracy": 0.9556,
+  "task_grouped_pairwise_ranking_accuracy": 0.98
+}

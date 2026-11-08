@@ -8,6 +8,7 @@ import numpy as np
 from ..dsl.ast import ASTNode
 from ..generator.tasks import TaskSpec
 from .features import extract_features
+from .features_cached import TaskFeatureContext, extract_features_cached
 from .ranker import MLPRanker
 
 
@@ -29,13 +30,21 @@ class LearnedScorer:
         return prob
 
     def score_candidates_batch(
-        self, candidates: List[ASTNode], task: TaskSpec
+        self,
+        candidates: List[ASTNode],
+        task: TaskSpec,
+        use_cache: bool = True,
     ) -> List[Tuple[float, int, ASTNode]]:
         """批量提取特征并利用向量化矩阵乘法并行打分。"""
         if not candidates:
             return []
 
-        X_batch = np.stack([extract_features(cand, task) for cand in candidates])
+        if use_cache:
+            ctx = TaskFeatureContext(task)
+            X_batch = np.stack([extract_features_cached(cand, ctx) for cand in candidates])
+        else:
+            X_batch = np.stack([extract_features(cand, task) for cand in candidates])
+
         probs = self.model.forward(X_batch)
 
         scored = [(float(probs[i]), i, candidates[i]) for i in range(len(candidates))]
