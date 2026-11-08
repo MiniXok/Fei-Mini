@@ -52,10 +52,44 @@ class TestFeiMiniCLI(unittest.TestCase):
             del os.environ["FEIMINI_TIMEOUT"]
             del os.environ["FEIMINI_MODEL"]
 
+    def test_invalid_config_handling(self) -> None:
+        """测试无效配置抛出清晰可操作的 ConfigurationError。"""
+        from feimini.config import ConfigurationError
+        with self.assertRaises(ConfigurationError):
+            FeiMiniConfig.load(cli_overrides={"timeout": -5.0})
+
+        # 无效 JSON 文件
+        bad_json_file = os.path.join(self.temp_dir.name, "bad_config.json")
+        with open(bad_json_file, "w") as f:
+            f.write("{invalid json...")
+
+        with self.assertRaises(ConfigurationError):
+            FeiMiniConfig.load(config_path=bad_json_file)
+
     def test_cli_doctor_runs(self) -> None:
         """测试 doctor 子命令诊断执行。"""
         code = main(["doctor"])
         self.assertIn(code, (0, 1))
+
+    def test_cli_json_debug_output_contract(self) -> None:
+        """测试 JSON 模式在 --debug 时输出纯净合法的 JSON 结构体。"""
+        import io
+        from unittest.mock import patch
+
+        mock_out = io.StringIO()
+        mock_err = io.StringIO()
+        with patch("sys.stdout", mock_out), patch("sys.stderr", mock_err):
+            code = main(["query", "--db", self.db_path, "--question", "Show all users", "--format", "json", "--debug"])
+
+        # stdout 必须可被标准 json.loads 直接解析
+        stdout_str = mock_out.getvalue()
+        try:
+            data = json.loads(stdout_str)
+            self.assertIn("decision", data)
+            self.assertIn("debug", data)
+            self.assertIn("compiled_sql", data["debug"])
+        except json.JSONDecodeError as e:
+            self.fail(f"stdout was not valid JSON in json mode: {e}\nRaw: {stdout_str}")
 
 
 if __name__ == "__main__":

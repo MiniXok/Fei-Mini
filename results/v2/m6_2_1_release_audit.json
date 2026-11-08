@@ -1,0 +1,63 @@
+{
+  "milestone": "M6.2.1",
+  "project": "Fei-Mini",
+  "organization": "MiniXok",
+  "package_version": "0.1.0",
+  "release_candidate": "0.1.0rc1",
+  "date": "2026-11-08",
+  "system_environment": {
+    "python_version": "3.14.9",
+    "sqlite_version": "3.54.0",
+    "ollama_version": "0.40.14",
+    "cpu": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz (4 physical cores, 8 threads)",
+    "total_ram_gb": 15.4,
+    "os": "Linux x86_64"
+  },
+  "package_distributions": {
+    "wheel": {
+      "filename": "feimini-0.1.0-py3-none-any.whl",
+      "sha256": "53f3562a1eb641a4beb755957ae387d9e00d5cde4fa21794c34e81d623fbf99e",
+      "size_bytes": 104338
+    },
+    "sdist": {
+      "filename": "feimini-0.1.0.tar.gz",
+      "sha256": "6a429a8db0be9aa120499618e1969bfbbd6991a0fb89f7ebddc8de2cac01d2a1",
+      "size_bytes": 77285
+    }
+  },
+  "clean_install_audit": {
+    "clean_venv_installation": true,
+    "entry_point_in_venv_bin": true,
+    "isolated_execution_no_pythonpath": true,
+    "external_cwd_execution": true,
+    "uninstallation_verified": true,
+    "sdist_installation_verified": true,
+    "wheel_reinstallation_verified": true
+  },
+  "offline_runtime_audit": {
+    "offline_runtime_execution_verified": true,
+    "zero_cloud_api_calls": true,
+    "model_disk_load_duration_sec": 2.33,
+    "resident_memory_mb": 222.1,
+    "ollama_server_recovery_verified": true
+  },
+  "security_regression_audit": {
+    "all_12_attack_vectors_blocked": true,
+    "database_file_sha256_invariant": true,
+    "clean_sidecars_no_wal_shm_journal": true,
+    "six_layer_defense_active": true
+  },
+  "interactive_clarification_audit": {
+    "context_chaining_verified": true,
+    "user_cancellation_reset_verified": true,
+    "malicious_clarification_blocked": true,
+    "precision_ambiguity_holdout_80": 0.9643,
+    "specificity_clear_queries": 0.9750
+  },
+  "test_suite_status": {
+    "total_tests": 96,
+    "tests_passed": 96,
+    "tests_failed": 0,
+    "smoke_test_passed": true
+  }
+}

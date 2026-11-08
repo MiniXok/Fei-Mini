@@ -29,3 +29,12 @@
    Local CPU inference with `qwen2.5-coder:1.5b` (Q4_K_M) takes between **2.5 to 5.0 seconds** per question on a quad-core Intel i5 CPU. It is not sub-second like pure SQL execution.
 5. **Soft Real-Time Scheduling Slack:**  
    Timeouts on standard non-real-time Linux kernels carry $\sim 1\text{ to }2\text{ ms}$ of operating system scheduling jitter.
+
+---
+
+## 3. Measured Natural-Language Intent Limitations
+
+In accordance with M6.1.3 hold-out benchmark evaluations:
+- **Ambiguity Recall Boundary:** Ambiguity recall is currently measured at **64.0% (32 / 50)**. In approximately 36% of ambiguous queries (e.g. *"Show some orders"* or *"Summarize customer activity"*), the small 1.5B model emits conservative baseline scans rather than triggering a clarification question.
+- **False Acceptance Rate on Non-Clear Queries:** Measured at **17.3% to 21.3%** on independent hold-out benchmarks. The system is designed to fail-closed on type and schema errors, but vague phrasing can sometimes resolve to a valid non-empty query.
+- **Continuous Improvement:** Milestone 6.2 packages this baseline; Milestone 6.3 will introduce grammar-constrained top-level query classification (`query_type`) to further narrow this gap.

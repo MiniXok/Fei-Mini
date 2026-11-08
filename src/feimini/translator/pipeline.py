@@ -53,11 +53,17 @@ class NaturalLanguageSQLiteAssistant:
     def __init__(
         self,
         model_name: str = "qwen2.5-coder:1.5b",
+        api_url: str = "http://127.0.0.1:11434/api/generate",
+        num_threads: int = 4,
         default_deadline_sec: float = 15.0,
         max_rows: int = 1000,
     ) -> None:
         self.default_deadline = default_deadline_sec
-        self.translator = LocalTranslatorClient(model_name=model_name)
+        self.translator = LocalTranslatorClient(
+            model_name=model_name,
+            api_url=api_url,
+            num_threads=num_threads,
+        )
         self.compiler = MiniRelSQLCompiler()
         self.backend = SQLiteExecutionBackend(max_rows=max_rows)
 

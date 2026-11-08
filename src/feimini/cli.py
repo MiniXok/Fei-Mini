@@ -10,14 +10,15 @@
 
 from __future__ import annotations
 import argparse
+from dataclasses import dataclass, field
 import json
 import os
 import resource
 import sqlite3
 import sys
 import time
+from typing import Any, Dict, List, Optional
 import urllib.request
-from typing import Optional
 
 from . import __version__
 from .config import FeiMiniConfig
@@ -27,6 +28,7 @@ from .translator.pipeline import NaturalLanguageQueryResult, NaturalLanguageSQLi
 
 def check_doctor() -> int:
     """系统环境与依赖健康检查诊断 (feimini doctor)。"""
+    cfg = FeiMiniConfig.load()
     print("=" * 72)
     print("  Fei-Mini System & Environment Doctor")
     print("=" * 72)
@@ -47,7 +49,6 @@ def check_doctor() -> int:
     # 3. 内存与硬件
     total_ram_gb = 16.0
     try:
-        # 读取 /proc/meminfo
         with open("/proc/meminfo") as f:
             for line in f:
                 if "MemTotal" in line:
@@ -59,20 +60,20 @@ def check_doctor() -> int:
     # 4. 本地 Ollama 连通性
     ollama_ok = False
     models_available = []
+    tags_url = cfg.ollama_url.replace("/api/generate", "/api/tags")
     try:
-        req = urllib.request.Request("http://127.0.0.1:11434/api/tags", headers={"Content-Type": "application/json"})
+        req = urllib.request.Request(tags_url, headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=2.0) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             models_available = [m["name"] for m in data.get("models", [])]
             ollama_ok = True
-        print(f"[4/6] Ollama Server: Connected at http://127.0.0.1:11434 -> OK")
+        print(f"[4/6] Ollama Server: Connected at {tags_url} -> OK")
     except Exception as e:
         print(f"[4/6] Ollama Server: Connection failed ({e}) -> WARNING")
         print("      Make sure Ollama is running (`ollama serve`).")
         all_ok = False
 
     # 5. 模型可用性
-    cfg = FeiMiniConfig.load()
     has_model = any(cfg.model in m for m in models_available)
     if has_model:
         print(f"[5/6] Configured Model: '{cfg.model}' installed -> OK")
@@ -95,18 +96,26 @@ def check_doctor() -> int:
         return 1
 
 
+@dataclass
+class ConversationState:
+    """交互式多轮会话状态跟踪器。"""
+    original_question: str
+    turns: List[str] = field(default_factory=list)
+    pending_prompt: Optional[str] = None
+
+
 def run_interactive_session(assistant: NaturalLanguageSQLiteAssistant, db_path: str, debug: bool = False):
-    """交互式多轮会话终端。"""
+    """交互式多轮会话终端，支持上下文继承、取消、重置与对抗防护。"""
     print("=" * 76)
-    print("  Fei-Mini Interactive Database Assistant (Type 'exit' or 'quit' to end)")
+    print("  Fei-Mini Interactive Database Assistant (Type 'exit' to quit, 'cancel' to reset)")
     print(f"  Connected Database: {os.path.basename(db_path)} (Strict Read-Only)")
     print("=" * 76)
 
-    last_pending_context: Optional[dict] = None
+    active_state: Optional[ConversationState] = None
 
     while True:
         try:
-            prompt_label = "Fei-Mini [Clarifying]> " if last_pending_context else "User> "
+            prompt_label = "Fei-Mini [Clarifying]> " if active_state else "User> "
             user_input = input(f"\n{prompt_label}").strip()
         except (KeyboardInterrupt, EOFError):
             print("\nExiting session. Goodbye!")
@@ -119,10 +128,17 @@ def run_interactive_session(assistant: NaturalLanguageSQLiteAssistant, db_path: 
             print("Session closed. Goodbye!")
             break
 
-        # 处理多轮会话拼接
-        if last_pending_context:
-            full_question = f"{last_pending_context['original_question']}. Specifically: {user_input}"
-            last_pending_context = None
+        # 支持用户随时主动取消当前的澄清会话
+        if user_input.lower() in ("cancel", "reset", "clear") and active_state:
+            print("[Clarification Canceled]: Resetting to new query context.")
+            active_state = None
+            continue
+
+        # 构造完整请求：如果处于澄清状态，关联历史上下文
+        if active_state:
+            active_state.turns.append(user_input)
+            # 组合所有轮次的明确细节
+            full_question = f"{active_state.original_question}. Specifically: {' '.join(active_state.turns)}"
         else:
             full_question = user_input
 
@@ -134,25 +150,28 @@ def run_interactive_session(assistant: NaturalLanguageSQLiteAssistant, db_path: 
         if result.needs_clarification:
             print(f"\n[Fei-Mini Clarification Question]")
             print(f"  {result.clarification_prompt}")
-            last_pending_context = {
-                "original_question": full_question,
-                "clarification_prompt": result.clarification_prompt,
-            }
+            if not active_state:
+                active_state = ConversationState(
+                    original_question=user_input,
+                    pending_prompt=result.clarification_prompt,
+                )
+            else:
+                active_state.pending_prompt = result.clarification_prompt
 
         elif result.is_unsupported:
             print(f"\n[Request Cannot Be Processed]")
             print(f"  {result.unsupported_reason or result.error_message}")
-            last_pending_context = None
+            active_state = None
 
         elif result.success:
             print(f"\n[Verified Result ({result.table_result.row_count} rows in {e2e_ms:.1f}ms)]")
             for line in result.formatted_output.split("\n"):
                 print(f"  {line}")
-            last_pending_context = None
+            active_state = None
 
         else:
             print(f"\n[Error]: {result.error_message}")
-            last_pending_context = None
+            active_state = None
 
         if debug and result.intent:
             print("\n  --- Developer Debug ---")
@@ -200,15 +219,22 @@ def main(argv: Optional[list] = None) -> int:
             print(f"Error: Database file '{args.db}' not found.", file=sys.stderr)
             return 1
 
-        cfg = FeiMiniConfig.load(cli_overrides={
-            "model": args.model,
-            "timeout": args.timeout,
-            "format": args.format,
-            "db": args.db,
-        })
+        from .config import ConfigurationError
+        try:
+            cfg = FeiMiniConfig.load(cli_overrides={
+                "model": args.model,
+                "timeout": args.timeout,
+                "format": args.format,
+                "db": args.db,
+            })
+        except ConfigurationError as e:
+            print(f"Configuration Error: {e}", file=sys.stderr)
+            return 1
 
         assistant = NaturalLanguageSQLiteAssistant(
             model_name=cfg.model,
+            api_url=cfg.ollama_url,
+            num_threads=cfg.num_threads,
             default_deadline_sec=cfg.timeout_sec,
             max_rows=cfg.max_rows,
         )
@@ -233,6 +259,13 @@ def main(argv: Optional[list] = None) -> int:
                     "unsupported_reason": res.unsupported_reason,
                     "total_latency_ms": res.total_latency_ms,
                 }
+                if args.debug and res.intent:
+                    out_dict["debug"] = {
+                        "decision": res.intent.decision.value,
+                        "query_type": res.intent.query_type.value,
+                        "compiled_sql": res.compiled_sql,
+                        "stage_durations_ms": res.stage_durations_ms,
+                    }
                 print(json.dumps(out_dict, indent=2))
                 return 0 if res.success else 1
 
@@ -247,12 +280,12 @@ def main(argv: Optional[list] = None) -> int:
                 print(f"[Error]: {res.error_message}", file=sys.stderr)
 
             if args.debug and res.intent:
-                print("\n--- Developer Debug Internals ---")
-                print(f"Decision: {res.intent.decision.value}")
-                print(f"Query Type: {res.intent.query_type.value}")
-                print(f"Compiled SQL: {res.compiled_sql}")
-                print(f"Stage Durations: {res.stage_durations_ms}")
-                print("---------------------------------")
+                print("\n--- Developer Debug Internals ---", file=sys.stderr)
+                print(f"Decision: {res.intent.decision.value}", file=sys.stderr)
+                print(f"Query Type: {res.intent.query_type.value}", file=sys.stderr)
+                print(f"Compiled SQL: {res.compiled_sql}", file=sys.stderr)
+                print(f"Stage Durations: {res.stage_durations_ms}", file=sys.stderr)
+                print("---------------------------------", file=sys.stderr)
 
             return 0 if res.success else 1
 

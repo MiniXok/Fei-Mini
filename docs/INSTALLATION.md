@@ -59,3 +59,12 @@ feimini doctor
 ========================================================================
   All system diagnostics passed! Fei-Mini is ready.
 ```
+
+---
+
+## 3. Operational Boundaries: Setup vs. Offline Runtime
+
+| Phase | Network Access Required? | Description |
+| :--- | :--- | :--- |
+| **Initial Installation** | **Yes** | Downloading Python wheel dependencies (`numpy`) and pulling the 986 MB Ollama model (`qwen2.5-coder:1.5b`). |
+| **Application Runtime** | **NO (100% Offline)** | Once installed, all natural-language question translation, MiniRel planning, SQL compilation, and SQLite execution run completely offline on CPU with zero cloud connectivity. |

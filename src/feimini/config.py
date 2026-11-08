@@ -14,6 +14,11 @@ from typing import Any, Dict, Optional
 DEFAULT_CONFIG_PATH = os.path.expanduser("~/.feimini/config.json")
 
 
+class ConfigurationError(Exception):
+    """配置加载与格式校验异常。"""
+    pass
+
+
 @dataclass
 class FeiMiniConfig:
     """Fei-Mini 运行时配置数据模型。"""
@@ -32,27 +37,41 @@ class FeiMiniConfig:
         cli_overrides: Optional[Dict[str, Any]] = None,
     ) -> FeiMiniConfig:
         """按优先级合并并加载配置：CLI > ENV > File > Defaults。"""
-        # 1. 默认配置
         cfg = cls()
 
-        # 2. 配置文件 (~/.feimini/config.json)
+        # 2. 配置文件 (~/.feimini/config.json 或指定路径)
         path = config_path or os.environ.get("FEIMINI_CONFIG", DEFAULT_CONFIG_PATH)
-        if os.path.exists(path):
+        if path and os.path.exists(path):
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     file_data = json.load(f)
+            except json.JSONDecodeError as e:
+                raise ConfigurationError(f"Invalid JSON in configuration file '{path}': {e}. Please fix or remove the file.")
+            except Exception as e:
+                raise ConfigurationError(f"Failed to read configuration file '{path}': {e}")
+
+            if isinstance(file_data, dict):
                 if "model" in file_data:
                     cfg.model = str(file_data["model"])
                 if "timeout_sec" in file_data:
-                    cfg.timeout_sec = float(file_data["timeout_sec"])
+                    try:
+                        cfg.timeout_sec = float(file_data["timeout_sec"])
+                    except ValueError:
+                        raise ConfigurationError(f"Invalid 'timeout_sec' in config '{path}': must be a positive number.")
                 if "num_threads" in file_data:
-                    cfg.num_threads = int(file_data["num_threads"])
+                    try:
+                        cfg.num_threads = int(file_data["num_threads"])
+                    except ValueError:
+                        raise ConfigurationError(f"Invalid 'num_threads' in config '{path}': must be an integer.")
                 if "output_format" in file_data:
-                    cfg.output_format = str(file_data["output_format"])
+                    fmt = str(file_data["output_format"]).lower()
+                    if fmt not in ("table", "json"):
+                        raise ConfigurationError(f"Invalid 'output_format' in config '{path}': must be 'table' or 'json'.")
+                    cfg.output_format = fmt
                 if "default_db" in file_data:
                     cfg.default_db = str(file_data["default_db"])
-            except Exception:
-                pass
+                if "ollama_url" in file_data:
+                    cfg.ollama_url = str(file_data["ollama_url"])
 
         # 3. 环境变量 (FEIMINI_*)
         if "FEIMINI_MODEL" in os.environ:
@@ -68,7 +87,9 @@ class FeiMiniConfig:
             except ValueError:
                 pass
         if "FEIMINI_FORMAT" in os.environ:
-            cfg.output_format = os.environ["FEIMINI_FORMAT"]
+            fmt = os.environ["FEIMINI_FORMAT"].lower()
+            if fmt in ("table", "json"):
+                cfg.output_format = fmt
         if "FEIMINI_DB" in os.environ:
             cfg.default_db = os.environ["FEIMINI_DB"]
         if "FEIMINI_OLLAMA_URL" in os.environ:
@@ -79,10 +100,21 @@ class FeiMiniConfig:
             if cli_overrides.get("model"):
                 cfg.model = cli_overrides["model"]
             if cli_overrides.get("timeout") is not None:
-                cfg.timeout_sec = float(cli_overrides["timeout"])
+                try:
+                    cfg.timeout_sec = float(cli_overrides["timeout"])
+                except ValueError:
+                    raise ConfigurationError(f"CLI timeout '{cli_overrides['timeout']}' must be a number.")
             if cli_overrides.get("format"):
-                cfg.output_format = cli_overrides["format"]
+                fmt = str(cli_overrides["format"]).lower()
+                if fmt in ("table", "json"):
+                    cfg.output_format = fmt
             if cli_overrides.get("db"):
                 cfg.default_db = cli_overrides["db"]
+
+        # 终极合法性校验
+        if cfg.timeout_sec <= 0:
+            raise ConfigurationError(f"Configured timeout_sec ({cfg.timeout_sec}) must be greater than 0.")
+        if cfg.num_threads <= 0:
+            raise ConfigurationError(f"Configured num_threads ({cfg.num_threads}) must be at least 1.")
 
         return cfg

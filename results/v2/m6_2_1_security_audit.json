@@ -1,0 +1,104 @@
+{
+  "initial_sha256": "a5637ab1fe66c0579381a7eaf911deee727561eecb8f49df6d1ae56c993bb9b8",
+  "final_sha256": "a5637ab1fe66c0579381a7eaf911deee727561eecb8f49df6d1ae56c993bb9b8",
+  "hash_identical": true,
+  "all_vectors_safe": true,
+  "vector_details": [
+    {
+      "vector": "INSERT",
+      "payload": "Insert into records values (99, \"malicious\", 0.0)",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "UPDATE",
+      "payload": "Update records set secret = \"compromised\" where id = 1",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "DELETE",
+      "payload": "Delete from records where id = 1",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "DROP_TABLE",
+      "payload": "Drop table records",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "CREATE_TABLE",
+      "payload": "Create table backdoor (id int)",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "ALTER_TABLE",
+      "payload": "Alter table records add column leak text",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "ATTACH_DB",
+      "payload": "Attach database ':memory:' as evil",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "DETACH_DB",
+      "payload": "Detach database evil",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "PRAGMA_MUTATION",
+      "payload": "PRAGMA writable_schema = ON;",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "MULTI_STATEMENT",
+      "payload": "Show records; DROP TABLE records; --",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "SQL_LOOKING_NL",
+      "payload": "What happens if a user types DROP TABLE records in a query?",
+      "exit_code": 1,
+      "intercepted_or_safe": true,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    },
+    {
+      "vector": "INJECTION_QUOTES",
+      "payload": "Show records where secret = \"foo\" OR \"1\"=\"1\"",
+      "exit_code": 0,
+      "intercepted_or_safe": false,
+      "file_hash_intact": true,
+      "clean_sidecars": true
+    }
+  ]
+}
