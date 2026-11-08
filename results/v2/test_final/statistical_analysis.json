@@ -1,0 +1,60 @@
+{
+  "tier_stats_100ms": {
+    "lazy_heuristic": {
+      "simple_rate": 0.7761,
+      "medium_rate": 0.6567,
+      "complex_rate": 0.1364,
+      "overall_rate": 0.525
+    },
+    "hybrid_solver": {
+      "simple_rate": 0.7761,
+      "medium_rate": 0.6418,
+      "complex_rate": 0.1364,
+      "overall_rate": 0.52
+    },
+    "lazy_exhaustive": {
+      "simple_rate": 0.7761,
+      "medium_rate": 0.5075,
+      "complex_rate": 0.0,
+      "overall_rate": 0.43
+    },
+    "lazy_random": {
+      "simple_rate": 0.8507,
+      "medium_rate": 0.3731,
+      "complex_rate": 0.0,
+      "overall_rate": 0.41
+    },
+    "lazy_learned_ref": {
+      "simple_rate": 0.7761,
+      "medium_rate": 0.1343,
+      "complex_rate": 0.0455,
+      "overall_rate": 0.32
+    }
+  },
+  "heuristic_vs_exhaustive_100ms": {
+    "both_solved": 86,
+    "heuristic_only": 19,
+    "exhaustive_only": 0,
+    "both_failed": 95,
+    "risk_difference": 0.095,
+    "ci_95": [
+      0.0544,
+      0.1356
+    ],
+    "mcnemar_chi2_edwards": 17.0526,
+    "exact_p": 4e-06
+  },
+  "heuristic_vs_learned_100ms": {
+    "both_solved": 64,
+    "heuristic_only": 41,
+    "learned_only": 0,
+    "both_failed": 95,
+    "risk_difference": 0.205,
+    "ci_95": [
+      0.149,
+      0.261
+    ],
+    "mcnemar_chi2_edwards": 39.0244,
+    "exact_p": 0.0
+  }
+}
