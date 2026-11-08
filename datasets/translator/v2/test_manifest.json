@@ -1,0 +1,6 @@
+{
+  "dataset_name": "feimini-nl-translator-v2",
+  "dev_prompts_count": 100,
+  "test_prompts_count": 100,
+  "test_manifest_sha256": "7208dd2962940721eb4f8dd7eb2f5a21697ced4d2cd84d71274ef28122623cad"
+}
