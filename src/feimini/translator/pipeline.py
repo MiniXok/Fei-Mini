@@ -23,8 +23,9 @@ from ..sqlite.backend import SQLiteExecutionBackend, SQLiteQueryResult, SQLiteTi
 from ..sqlite.compiler import MiniRelSQLCompiler
 from ..sqlite.schema import SQLiteDatabaseSchema, SQLiteSchemaAdapter
 from .client import LocalTranslatorClient, TranslatorClientError, TranslatorTimeoutError
-from .contract import IntentSpec, validate_intent_against_schema
+from .contract import IntentDecision, IntentSpec, validate_intent_against_schema
 from .resolver import IntentResolutionError, IntentResolver
+from .semantic_guard import SemanticIntentGuard
 
 
 @dataclass(frozen=True)
@@ -136,8 +137,13 @@ class NaturalLanguageSQLiteAssistant:
 
         stages["translator_inference_ms"] = (time.perf_counter() - t0) * 1000.0
 
+        # 阶段 2.5: 语义安全护栏审计 (SemanticIntentGuard)
+        t_guard_start = time.perf_counter()
+        intent = SemanticIntentGuard.audit_and_guard(question, intent, schema)
+        stages["semantic_guard_ms"] = (time.perf_counter() - t_guard_start) * 1000.0
+
         # 阶段 3: 澄清或不支持意图处理
-        if intent.clarification_needed:
+        if intent.decision == IntentDecision.CLARIFY or intent.clarification_needed:
             prompt = intent.clarification_prompt or "Your request is ambiguous. Please specify more details."
             return NaturalLanguageQueryResult(
                 question=question,
@@ -155,8 +161,8 @@ class NaturalLanguageSQLiteAssistant:
                 stage_durations_ms=stages,
             )
 
-        if intent.unsupported:
-            reason = intent.unsupported_reason or "This operation is not supported by the current database schema."
+        if intent.decision == IntentDecision.ABSTAIN or intent.unsupported:
+            reason = intent.abstain_reason or intent.unsupported_reason or "This operation is not supported by the current database schema."
             return NaturalLanguageQueryResult(
                 question=question,
                 success=False,
