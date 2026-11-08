@@ -1,0 +1,41 @@
+{
+  "project": "Fei-Mini",
+  "experiment": "001",
+  "protocol_version": "m5.8-frozen",
+  "dataset_version": "feimini-mini-rel-v2",
+  "test_manifest_sha256": "f07f86c267dace31f2cf034bcfd72b6e75a44ac796d3673c1ab8fcb9c88edecc",
+  "mlp_checkpoint_sha256": "52f879e5ffc20ac9cd3097cf20dd0a4e91d61f1a93e3fba09b5dec0ce456e933",
+  "checkpoint_path": "checkpoints/mlp_ranker_v2.npz",
+  "solvers": [
+    {
+      "name": "lazy_heuristic",
+      "class": "feimini.search.lazy.LazyHeuristicSolver",
+      "role": "primary_recommended_engine"
+    },
+    {
+      "name": "hybrid_solver",
+      "class": "feimini.search.lazy.HybridSearchSolver",
+      "role": "two_stage_hybrid_engine"
+    },
+    {
+      "name": "lazy_exhaustive",
+      "class": "feimini.search.lazy.LazyExhaustiveSolver",
+      "role": "reference_deterministic_baseline"
+    },
+    {
+      "name": "lazy_random",
+      "class": "feimini.search.lazy.LazyRandomSolver",
+      "base_seed": 1337,
+      "role": "reference_random_baseline"
+    },
+    {
+      "name": "lazy_learned_ref",
+      "class": "feimini.search.lazy.LazyLearnedSolver",
+      "checkpoint_path": "checkpoints/mlp_ranker_v2.npz",
+      "role": "explicitly_rejected_reference_baseline"
+    }
+  ],
+  "deadlines_ms": [10, 25, 50, 100, 250],
+  "candidate_budgets": [32, 128, 512, 2048],
+  "reproduction_command": "PYTHONPATH=src python3 src/feimini/evaluation/run_final_eval.py --tasks-dir datasets/v2/test --output-raw-dir results/v2/test_final/raw --output-report-dir results/v2/test_final/reports --run-name final_locked_test_eval --solvers lazy_heuristic hybrid_solver lazy_exhaustive lazy_random lazy_learned_ref --deadlines 10 25 50 100 250"
+}

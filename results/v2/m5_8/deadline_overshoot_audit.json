@@ -1,0 +1,70 @@
+{
+  "deadlines": [
+    {
+      "deadline_ms": 10,
+      "mean_wall_ms": 7.87,
+      "p90_wall_ms": 10.47,
+      "max_wall_ms": 16.46,
+      "mean_overshoot_ms": 0.59,
+      "max_overshoot_ms": 6.46,
+      "status_distribution": {
+        "SOLVED_EXAMPLE_CONSISTENT": 16,
+        "TIMEOUT_WITHOUT_CANDIDATE": 34
+      }
+    },
+    {
+      "deadline_ms": 25,
+      "mean_wall_ms": 18.35,
+      "p90_wall_ms": 26.27,
+      "max_wall_ms": 26.44,
+      "mean_overshoot_ms": 1.01,
+      "max_overshoot_ms": 1.44,
+      "status_distribution": {
+        "SOLVED_EXAMPLE_CONSISTENT": 16,
+        "TIMEOUT_WITHOUT_CANDIDATE": 34
+      }
+    },
+    {
+      "deadline_ms": 50,
+      "mean_wall_ms": 36.35,
+      "p90_wall_ms": 53.09,
+      "max_wall_ms": 62.37,
+      "mean_overshoot_ms": 2.53,
+      "max_overshoot_ms": 12.37,
+      "status_distribution": {
+        "SOLVED_EXAMPLE_CONSISTENT": 16,
+        "TIMEOUT_WITHOUT_CANDIDATE": 34
+      }
+    },
+    {
+      "deadline_ms": 100,
+      "mean_wall_ms": 63.74,
+      "p90_wall_ms": 101.14,
+      "max_wall_ms": 103.75,
+      "mean_overshoot_ms": 1.14,
+      "max_overshoot_ms": 3.75,
+      "status_distribution": {
+        "SOLVED_EXAMPLE_CONSISTENT": 23,
+        "TIMEOUT_WITHOUT_CANDIDATE": 27
+      }
+    },
+    {
+      "deadline_ms": 250,
+      "mean_wall_ms": 112.52,
+      "p90_wall_ms": 204.16,
+      "max_wall_ms": 216.6,
+      "mean_overshoot_ms": 0.0,
+      "max_overshoot_ms": 0.0,
+      "status_distribution": {
+        "SOLVED_EXAMPLE_CONSISTENT": 23,
+        "SEARCH_EXHAUSTED": 27
+      }
+    }
+  ],
+  "atomic_operations_us": {
+    "type_check_us": 0.11,
+    "heuristic_score_us": 6.55,
+    "execution_us": 4.5,
+    "total_atomic_slice_us": 11.17
+  }
+}

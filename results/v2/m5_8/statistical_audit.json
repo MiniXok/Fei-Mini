@@ -1,0 +1,23 @@
+{
+  "sample_size": 50,
+  "lazy_solved": 23,
+  "eager_solved": 15,
+  "contingency_matrix": {
+    "both_solved": 15,
+    "lazy_only": 8,
+    "eager_only": 0,
+    "both_failed": 27
+  },
+  "risk_difference": 0.16,
+  "ci_95": [
+    0.0584,
+    0.2616
+  ],
+  "mcnemar_chi2_raw": 8.0,
+  "mcnemar_chi2_edwards": 6.125,
+  "exact_binomial_p": 0.0078,
+  "bonferroni_alpha": 0.01,
+  "is_significant_uncorrected": true,
+  "is_significant_bonferroni": true,
+  "study_characterization": "exploratory_development_sample"
+}
