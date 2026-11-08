@@ -1,0 +1,7 @@
+{
+  "dataset_name": "ambiguity_holdout_80",
+  "total_cases": 80,
+  "ambiguous_or_unsupported_count": 40,
+  "clear_unambiguous_count": 40,
+  "sha256": "5fa5c7cd172887768a939b152af1001a0a18847ce22c9fb2d9416e9815dc87cd"
+}
