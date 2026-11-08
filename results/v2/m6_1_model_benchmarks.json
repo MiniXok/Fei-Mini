@@ -1,0 +1,133 @@
+{
+  "candidate_a": {
+    "model_name": "qwen2.5-coder:1.5b",
+    "load_duration_sec": 0.001,
+    "mean_time_to_first_token_sec": 0.376,
+    "mean_tokens_per_sec": 15.18,
+    "mean_e2e_latency_sec": 4.29,
+    "json_validity_rate": 1.0,
+    "clarification_accuracy": 0.6667,
+    "peak_ram_mb": 457.55,
+    "responses": [
+      {
+        "prompt_id": "p1_unambiguous",
+        "raw_response": "{\n  \"target_table\": \"customers\",\n  \"target_columns\": [\"name\", \"balance\"],\n  \"clarification_needed\": false,\n  \"clarification_prompt\": \"Please provide the city for which you want to find the top 5 customers by balance descending.\"\n}",
+        "parsed": {
+          "target_table": "customers",
+          "target_columns": [
+            "name",
+            "balance"
+          ],
+          "clarification_needed": false,
+          "clarification_prompt": "Please provide the city for which you want to find the top 5 customers by balance descending."
+        },
+        "valid_json": true,
+        "tokens_generated": 58,
+        "tokens_per_sec": 14.74,
+        "wall_sec": 4.336
+      },
+      {
+        "prompt_id": "p2_filter",
+        "raw_response": "{\n  \"target_table\": \"orders\",\n  \"target_columns\": [\"order_id\", \"amount\"],\n  \"clarification_needed\": true,\n  \"clarification_prompt\": \"Please provide the amount threshold for the orders you want to list.\"\n}",
+        "parsed": {
+          "target_table": "orders",
+          "target_columns": [
+            "order_id",
+            "amount"
+          ],
+          "clarification_needed": true,
+          "clarification_prompt": "Please provide the amount threshold for the orders you want to list."
+        },
+        "valid_json": true,
+        "tokens_generated": 53,
+        "tokens_per_sec": 15.37,
+        "wall_sec": 3.849
+      },
+      {
+        "prompt_id": "p3_ambiguous",
+        "raw_response": "{\n  \"target_table\": \"customers\",\n  \"target_columns\": [\"name\", \"balance\"],\n  \"clarification_needed\": true,\n  \"clarification_prompt\": \"Please specify the criteria for the 'best' customers. Are they those with the highest balance, the most recent orders, or something else?\"\n}",
+        "parsed": {
+          "target_table": "customers",
+          "target_columns": [
+            "name",
+            "balance"
+          ],
+          "clarification_needed": true,
+          "clarification_prompt": "Please specify the criteria for the 'best' customers. Are they those with the highest balance, the most recent orders, or something else?"
+        },
+        "valid_json": true,
+        "tokens_generated": 67,
+        "tokens_per_sec": 15.44,
+        "wall_sec": 4.687
+      }
+    ]
+  },
+  "candidate_b": {
+    "model_name": "minicpm5-2b-q4-k-m.gguf:latest",
+    "load_duration_sec": 3.593,
+    "mean_time_to_first_token_sec": 0.621,
+    "mean_tokens_per_sec": 10.4,
+    "mean_e2e_latency_sec": 6.431,
+    "json_validity_rate": 1.0,
+    "clarification_accuracy": 0.6667,
+    "peak_ram_mb": 457.55,
+    "responses": [
+      {
+        "prompt_id": "p1_unambiguous",
+        "raw_response": "{\n  \"target_table\": \"customers\",\n  \"target_columns\": [\"customer_id\", \"name\", \"city\", \"balance\", \"is_vip\"],\n  \"clarification_needed\": false,\n  \"clarification_prompt\": \"Please provide additional context if needed.\"\n}",
+        "parsed": {
+          "target_table": "customers",
+          "target_columns": [
+            "customer_id",
+            "name",
+            "city",
+            "balance",
+            "is_vip"
+          ],
+          "clarification_needed": false,
+          "clarification_prompt": "Please provide additional context if needed."
+        },
+        "valid_json": true,
+        "tokens_generated": 61,
+        "tokens_per_sec": 10.37,
+        "wall_sec": 6.592
+      },
+      {
+        "prompt_id": "p2_filter",
+        "raw_response": "{\n  \"target_table\": \"orders\",\n  \"target_columns\": [\"amount\"],\n  \"clarification_needed\": false,\n  \"clarification_prompt\": \"Please specify the amount threshold for filtering orders. The current query filters orders where amount > 200, but the threshold needs to be confirmed.\"\n}",
+        "parsed": {
+          "target_table": "orders",
+          "target_columns": [
+            "amount"
+          ],
+          "clarification_needed": false,
+          "clarification_prompt": "Please specify the amount threshold for filtering orders. The current query filters orders where amount > 200, but the threshold needs to be confirmed."
+        },
+        "valid_json": true,
+        "tokens_generated": 66,
+        "tokens_per_sec": 10.21,
+        "wall_sec": 7.115
+      },
+      {
+        "prompt_id": "p3_ambiguous",
+        "raw_response": "{\n  \"target_table\": \"customers\",\n  \"target_columns\": [\"customer_id\", \"name\", \"city\", \"balance\", \"is_vip\"],\n  \"clarification_needed\": false,\n  \"clarification_prompt\": \"\"\n}",
+        "parsed": {
+          "target_table": "customers",
+          "target_columns": [
+            "customer_id",
+            "name",
+            "city",
+            "balance",
+            "is_vip"
+          ],
+          "clarification_needed": false,
+          "clarification_prompt": ""
+        },
+        "valid_json": true,
+        "tokens_generated": 53,
+        "tokens_per_sec": 10.6,
+        "wall_sec": 5.587
+      }
+    ]
+  }
+}
