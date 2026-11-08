@@ -20,5 +20,8 @@ dependencies = [
 Homepage = "https://minixok.pages.dev"
 Repository = "https://github.com/MiniXok/Fei-Mini"
 
+[project.scripts]
+feimini = "feimini.cli:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]

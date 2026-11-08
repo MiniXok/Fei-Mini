@@ -4,6 +4,8 @@ from .contract import (
     AggregationIntent,
     FilterIntent,
     SortIntent,
+    IntentDecision,
+    QueryType,
     IntentSpec,
     validate_intent_against_schema,
 )

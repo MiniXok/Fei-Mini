@@ -38,6 +38,13 @@ class IntentDecision(str, Enum):
     ABSTAIN = "ABSTAIN"
 
 
+class QueryType(str, Enum):
+    """输入自然语言查询顶层分类。"""
+    DATABASE_QUERY = "DATABASE_QUERY"
+    UNSUPPORTED_REQUEST = "UNSUPPORTED_REQUEST"
+    NON_DATABASE_REQUEST = "NON_DATABASE_REQUEST"
+
+
 @dataclass(frozen=True)
 class AggregationIntent:
     """聚合意图。"""
@@ -65,6 +72,7 @@ class SortIntent:
 class IntentSpec:
     """结构化用户意图契约。"""
     decision: IntentDecision = IntentDecision.EXECUTE
+    query_type: QueryType = QueryType.DATABASE_QUERY
     target_table: Optional[str] = None
     target_columns: Tuple[str, ...] = ()
     aggregations: Tuple[AggregationIntent, ...] = ()
@@ -77,6 +85,7 @@ class IntentSpec:
     def __init__(
         self,
         decision: IntentDecision = IntentDecision.EXECUTE,
+        query_type: QueryType = QueryType.DATABASE_QUERY,
         target_table: Optional[str] = None,
         target_columns: Tuple[str, ...] = (),
         aggregations: Tuple[AggregationIntent, ...] = (),
@@ -95,6 +104,7 @@ class IntentSpec:
             decision = IntentDecision.ABSTAIN
 
         object.__setattr__(self, "decision", decision)
+        object.__setattr__(self, "query_type", query_type)
         object.__setattr__(self, "target_table", target_table)
         object.__setattr__(self, "target_columns", target_columns)
         object.__setattr__(self, "aggregations", aggregations)
@@ -120,6 +130,7 @@ class IntentSpec:
     def to_dict(self) -> Dict[str, Any]:
         return {
             "decision": self.decision.value,
+            "query_type": self.query_type.value,
             "target_table": self.target_table,
             "target_columns": list(self.target_columns),
             "aggregations": [
@@ -152,6 +163,14 @@ class IntentSpec:
             decision = IntentDecision.ABSTAIN
         else:
             decision = IntentDecision.EXECUTE
+
+        q_type_str = data.get("query_type", "").upper()
+        if q_type_str in ("DATABASE_QUERY", "UNSUPPORTED_REQUEST", "NON_DATABASE_REQUEST"):
+            query_type = QueryType(q_type_str)
+        elif decision == IntentDecision.ABSTAIN:
+            query_type = QueryType.UNSUPPORTED_REQUEST
+        else:
+            query_type = QueryType.DATABASE_QUERY
 
         aggs = tuple(
             AggregationIntent(
