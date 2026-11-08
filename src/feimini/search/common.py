@@ -6,11 +6,22 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from enum import Enum
 import time
 from typing import Any, Dict, List, Optional
 
 from ..dsl.ast import ASTNode
 from ..generator.tasks import TaskSpec
+
+
+class SolverStatus(str, Enum):
+    """标准求解结果状态枚举。"""
+    SOLVED_EXAMPLE_CONSISTENT = "SOLVED_EXAMPLE_CONSISTENT"
+    TIMEOUT_WITH_CANDIDATE = "TIMEOUT_WITH_CANDIDATE"
+    TIMEOUT_WITHOUT_CANDIDATE = "TIMEOUT_WITHOUT_CANDIDATE"
+    SEARCH_EXHAUSTED = "SEARCH_EXHAUSTED"
+    INVALID_CANDIDATE = "INVALID_CANDIDATE"
+    INSUFFICIENT_SPECIFICATION = "INSUFFICIENT_SPECIFICATION"
 
 
 @dataclass(frozen=True)
@@ -45,12 +56,20 @@ class SearchResult:
     cpu_time: float
     wall_time: float
     trace: List[CandidateRecord] = field(default_factory=list)
+    status: SolverStatus = SolverStatus.SEARCH_EXHAUSTED
+    deadline_exceeded: bool = False
+
+    def __post_init__(self) -> None:
+        if self.solved and self.status == SolverStatus.SEARCH_EXHAUSTED:
+            self.status = SolverStatus.SOLVED_EXAMPLE_CONSISTENT
 
     def to_dict(self, include_trace: bool = False) -> Dict[str, Any]:
         d = {
             "task_id": self.task_id,
             "solver_name": self.solver_name,
             "solved": self.solved,
+            "status": self.status.value,
+            "deadline_exceeded": self.deadline_exceeded,
             "best_program": self.best_program.to_dict() if self.best_program else None,
             "candidates_generated": self.candidates_generated,
             "candidates_type_rejected": self.candidates_type_rejected,
