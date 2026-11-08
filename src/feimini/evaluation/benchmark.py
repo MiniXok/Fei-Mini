@@ -16,6 +16,8 @@ from typing import Any, Dict, List, Optional
 from ..generator.tasks import EvaluatorTaskData
 from ..search.common import BaseSolver, SearchBudget
 from ..search.exhaustive import ExhaustiveSearchSolver
+from ..search.heuristic import HeuristicSearchSolver
+from ..search.guided import LearnedSearchSolver
 from ..search.random_search import RandomSearchSolver
 from ..verifier.execution import ProgramVerifier
 from .metrics import TaskEvaluationRecord, aggregate_metrics
@@ -191,10 +193,20 @@ def main() -> None:
     parser.add_argument("--report-dir", type=str, default="results/reports", help="Directory for summary reports")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of tasks")
     parser.add_argument("--budgets", type=int, nargs="+", default=[32, 128, 512, 2048])
+    parser.add_argument("--solvers", type=str, nargs="+", default=["exhaustive", "random", "heuristic", "learned"])
     args = parser.parse_args()
+
+    solver_map = {
+        "exhaustive": ExhaustiveSearchSolver(),
+        "random": RandomSearchSolver(),
+        "heuristic": HeuristicSearchSolver(),
+        "learned": LearnedSearchSolver(),
+    }
+    selected_solvers = [solver_map[s] for s in args.solvers if s in solver_map]
 
     runner = BenchmarkRunner(
         tasks_dir=args.tasks_dir,
+        solvers=selected_solvers,
         budgets=args.budgets,
         raw_output_dir=args.raw_dir,
         report_output_dir=args.report_dir,

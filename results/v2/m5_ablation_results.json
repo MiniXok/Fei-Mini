@@ -1,0 +1,29 @@
+{
+  "latency_us": {
+    "feature_extraction_us": 21.3,
+    "model_forward_us": 1.91,
+    "interpreter_exec_us": 23.44
+  },
+  "ablations": {
+    "full_features": {
+      "ex_solve_rate": 0.32,
+      "gen_solve_rate": 0.26,
+      "avg_candidates_executed": 96.26
+    },
+    "no_schema_overlap": {
+      "ex_solve_rate": 0.12,
+      "gen_solve_rate": 0.06,
+      "avg_candidates_executed": 117.5
+    },
+    "no_foreign_key_join": {
+      "ex_solve_rate": 0.32,
+      "gen_solve_rate": 0.26,
+      "avg_candidates_executed": 96.26
+    },
+    "no_cardinality_limit": {
+      "ex_solve_rate": 0.26,
+      "gen_solve_rate": 0.22,
+      "avg_candidates_executed": 101.94
+    }
+  }
+}

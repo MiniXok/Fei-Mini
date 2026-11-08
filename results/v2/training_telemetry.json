@@ -1,0 +1,139 @@
+{
+  "parameters": 2177,
+  "input_dim": 32,
+  "hidden_dim": 64,
+  "checkpoint_path": "checkpoints/mlp_ranker_v2.npz",
+  "checkpoint_sha256": "52f879e5ffc20ac9cd3097cf20dd0a4e91d61f1a93e3fba09b5dec0ce456e933",
+  "checkpoint_size_bytes": 17223,
+  "train_samples": 4500,
+  "train_time_sec": 4.91,
+  "final_loss": 0.07048,
+  "final_accuracy": 0.9818,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 0.45737,
+      "acc": 0.8889
+    },
+    {
+      "epoch": 2,
+      "loss": 0.3226,
+      "acc": 0.8889
+    },
+    {
+      "epoch": 3,
+      "loss": 0.27545,
+      "acc": 0.8889
+    },
+    {
+      "epoch": 4,
+      "loss": 0.23858,
+      "acc": 0.9042
+    },
+    {
+      "epoch": 5,
+      "loss": 0.20879,
+      "acc": 0.9053
+    },
+    {
+      "epoch": 6,
+      "loss": 0.18477,
+      "acc": 0.9118
+    },
+    {
+      "epoch": 7,
+      "loss": 0.16545,
+      "acc": 0.9344
+    },
+    {
+      "epoch": 8,
+      "loss": 0.14976,
+      "acc": 0.9518
+    },
+    {
+      "epoch": 9,
+      "loss": 0.13688,
+      "acc": 0.9587
+    },
+    {
+      "epoch": 10,
+      "loss": 0.12619,
+      "acc": 0.9676
+    },
+    {
+      "epoch": 11,
+      "loss": 0.11741,
+      "acc": 0.9687
+    },
+    {
+      "epoch": 12,
+      "loss": 0.11005,
+      "acc": 0.9718
+    },
+    {
+      "epoch": 13,
+      "loss": 0.10381,
+      "acc": 0.974
+    },
+    {
+      "epoch": 14,
+      "loss": 0.09852,
+      "acc": 0.9773
+    },
+    {
+      "epoch": 15,
+      "loss": 0.09396,
+      "acc": 0.9802
+    },
+    {
+      "epoch": 16,
+      "loss": 0.09005,
+      "acc": 0.9787
+    },
+    {
+      "epoch": 17,
+      "loss": 0.08668,
+      "acc": 0.9793
+    },
+    {
+      "epoch": 18,
+      "loss": 0.08367,
+      "acc": 0.9793
+    },
+    {
+      "epoch": 19,
+      "loss": 0.08107,
+      "acc": 0.9793
+    },
+    {
+      "epoch": 20,
+      "loss": 0.07878,
+      "acc": 0.9798
+    },
+    {
+      "epoch": 21,
+      "loss": 0.0767,
+      "acc": 0.9818
+    },
+    {
+      "epoch": 22,
+      "loss": 0.07491,
+      "acc": 0.9818
+    },
+    {
+      "epoch": 23,
+      "loss": 0.07326,
+      "acc": 0.9818
+    },
+    {
+      "epoch": 24,
+      "loss": 0.0718,
+      "acc": 0.9818
+    },
+    {
+      "epoch": 25,
+      "loss": 0.07048,
+      "acc": 0.9818
+    }
+  ]
+}
