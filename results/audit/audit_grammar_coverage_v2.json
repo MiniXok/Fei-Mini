@@ -1,0 +1,2895 @@
+[
+  {
+    "task_id": "dev_0000",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 2,
+    "semantic_rank": 2,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "orders"
+    }
+  },
+  {
+    "task_id": "dev_0001",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "left_col": "customer_id",
+        "right_col": "cust_id"
+      },
+      "columns": [
+        "is_express",
+        "loyalty_level",
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0002",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "students"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "courses"
+              },
+              "left_col": "student_id",
+              "right_col": "stu_id"
+            },
+            "group_cols": [
+              "major"
+            ]
+          },
+          "agg_col": "stu_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0003",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 155,
+    "semantic_rank": 155,
+    "gold_dict": {
+      "op": "FILTER",
+      "source": {
+        "op": "SCAN",
+        "table_name": "students"
+      },
+      "col_name": "major",
+      "predicate_op": "NEQ",
+      "value": "CS"
+    }
+  },
+  {
+    "task_id": "dev_0004",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": 105,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "shipments"
+          },
+          "col_name": "wh_id",
+          "predicate_op": "NEQ",
+          "value": 6
+        },
+        "sort_col": "wh_id",
+        "direction": "ASC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0005",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "left_col": "student_id",
+          "right_col": "stu_id"
+        },
+        "col_name": "stu_id",
+        "predicate_op": "EQ",
+        "value": 1
+      },
+      "columns": [
+        "student_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0006",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 70,
+    "semantic_rank": 70,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "sort_col": "city",
+        "direction": "ASC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0007",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "warehouses"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "left_col": "wh_id",
+        "right_col": "wh_id"
+      },
+      "columns": [
+        "right.wh_id",
+        "capacity",
+        "wh_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0008",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "customers"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "orders"
+              },
+              "left_col": "customer_id",
+              "right_col": "cust_id"
+            },
+            "group_cols": [
+              "city"
+            ]
+          },
+          "agg_col": "cust_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0009",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 32,
+    "semantic_rank": 32,
+    "gold_dict": {
+      "op": "FILTER",
+      "source": {
+        "op": "SCAN",
+        "table_name": "shipments"
+      },
+      "col_name": "shipment_id",
+      "predicate_op": "NEQ",
+      "value": 1004
+    }
+  },
+  {
+    "task_id": "dev_0010",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "col_name": "cust_id",
+          "predicate_op": "NEQ",
+          "value": 8
+        },
+        "sort_col": "order_id",
+        "direction": "ASC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0011",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "right.wh_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0012",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 202,
+    "semantic_rank": 202,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SCAN",
+          "table_name": "warehouses"
+        },
+        "sort_col": "capacity",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0013",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "students"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "courses"
+        },
+        "left_col": "student_id",
+        "right_col": "stu_id"
+      },
+      "columns": [
+        "stu_id",
+        "score",
+        "course_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0014",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "wh_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0015",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 155,
+    "semantic_rank": 155,
+    "gold_dict": {
+      "op": "FILTER",
+      "source": {
+        "op": "SCAN",
+        "table_name": "students"
+      },
+      "col_name": "major",
+      "predicate_op": "NEQ",
+      "value": "CS"
+    }
+  },
+  {
+    "task_id": "dev_0016",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "students"
+        },
+        "col_name": "student_id",
+        "predicate_op": "LT",
+        "value": 6
+      },
+      "columns": [
+        "major",
+        "student_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0017",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "warehouses"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "shipments"
+          },
+          "left_col": "wh_id",
+          "right_col": "wh_id"
+        },
+        "col_name": "right.wh_id",
+        "predicate_op": "GT",
+        "value": 1
+      },
+      "columns": [
+        "wh_id",
+        "capacity",
+        "right.wh_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0018",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "warehouses"
+      },
+      "columns": [
+        "wh_id",
+        "capacity",
+        "zone"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0019",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": 186,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "col_name": "amount",
+          "predicate_op": "NEQ",
+          "value": 106.75
+        },
+        "sort_col": "is_express",
+        "direction": "ASC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0020",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "warehouses"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "shipments"
+          },
+          "left_col": "wh_id",
+          "right_col": "wh_id"
+        },
+        "col_name": "weight_kg",
+        "predicate_op": "LT",
+        "value": 76.28
+      },
+      "columns": [
+        "capacity",
+        "right.wh_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0021",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 86,
+    "semantic_rank": 86,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "orders"
+      },
+      "columns": [
+        "amount"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0022",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "warehouses"
+        },
+        "col_name": "capacity",
+        "predicate_op": "EQ",
+        "value": 200
+      },
+      "columns": [
+        "capacity",
+        "wh_id",
+        "zone"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0023",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "cost",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0024",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "students"
+      },
+      "columns": [
+        "major",
+        "grade_year",
+        "student_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0025",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 1398,
+    "semantic_rank": 1398,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "col_name": "loyalty_level",
+        "predicate_op": "EQ",
+        "value": 3
+      },
+      "columns": [
+        "loyalty_level"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0026",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "left_col": "student_id",
+          "right_col": "stu_id"
+        },
+        "col_name": "score",
+        "predicate_op": "GT",
+        "value": 94.9
+      },
+      "columns": [
+        "stu_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0027",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 1,
+    "semantic_rank": 1,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "courses"
+    }
+  },
+  {
+    "task_id": "dev_0028",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "students"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "courses"
+        },
+        "left_col": "student_id",
+        "right_col": "stu_id"
+      },
+      "columns": [
+        "major",
+        "credits",
+        "student_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0029",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "students"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "courses"
+              },
+              "left_col": "student_id",
+              "right_col": "stu_id"
+            },
+            "group_cols": [
+              "major"
+            ]
+          },
+          "agg_col": "stu_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0030",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 12,
+    "semantic_rank": 12,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "courses"
+      },
+      "columns": [
+        "credits",
+        "score"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0031",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 739,
+    "semantic_rank": 739,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "col_name": "shipment_id",
+        "predicate_op": "NEQ",
+        "value": 1003
+      },
+      "columns": [
+        "shipment_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0032",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "left_col": "customer_id",
+          "right_col": "cust_id"
+        },
+        "col_name": "is_express",
+        "predicate_op": "EQ",
+        "value": true
+      },
+      "columns": [
+        "order_id",
+        "amount"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0033",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 2,
+    "semantic_rank": 2,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "students"
+    }
+  },
+  {
+    "task_id": "dev_0034",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "col_name": "order_id",
+        "predicate_op": "NEQ",
+        "value": 1011
+      },
+      "columns": [
+        "cust_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0035",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "wh_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0036",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "students"
+      },
+      "columns": [
+        "grade_year",
+        "major"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0037",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "warehouses"
+          },
+          "col_name": "wh_id",
+          "predicate_op": "GT",
+          "value": 7
+        },
+        "sort_col": "capacity",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0038",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "shipment_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0039",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 130,
+    "semantic_rank": 130,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "warehouses"
+      },
+      "columns": [
+        "zone"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0040",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "col_name": "amount",
+        "predicate_op": "EQ",
+        "value": 198.02
+      },
+      "columns": [
+        "is_express"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0041",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "left_col": "student_id",
+          "right_col": "stu_id"
+        },
+        "col_name": "grade_year",
+        "predicate_op": "EQ",
+        "value": 4
+      },
+      "columns": [
+        "student_id",
+        "major"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0042",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 2,
+    "semantic_rank": 2,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "warehouses"
+    }
+  },
+  {
+    "task_id": "dev_0043",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 227,
+    "semantic_rank": 227,
+    "gold_dict": {
+      "op": "SUM",
+      "source": {
+        "op": "GROUP_BY",
+        "source": {
+          "op": "SCAN",
+          "table_name": "students"
+        },
+        "group_cols": [
+          "major"
+        ]
+      },
+      "agg_col": "student_id",
+      "as_col": "sum_metric"
+    }
+  },
+  {
+    "task_id": "dev_0044",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "left_col": "student_id",
+          "right_col": "stu_id"
+        },
+        "col_name": "student_id",
+        "predicate_op": "GT",
+        "value": 3
+      },
+      "columns": [
+        "credits",
+        "stu_id",
+        "course_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0045",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 9,
+    "semantic_rank": 9,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "shipments"
+      },
+      "columns": [
+        "shipment_id",
+        "cost"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0046",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "col_name": "stu_id",
+          "predicate_op": "EQ",
+          "value": 9
+        },
+        "sort_col": "stu_id",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0047",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "right.wh_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0048",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 117,
+    "semantic_rank": 117,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "sort_col": "weight_kg",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0049",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "left_col": "customer_id",
+        "right_col": "cust_id"
+      },
+      "columns": [
+        "cust_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0050",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "customers"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "orders"
+              },
+              "left_col": "customer_id",
+              "right_col": "cust_id"
+            },
+            "group_cols": [
+              "city"
+            ]
+          },
+          "agg_col": "amount",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0051",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 71,
+    "semantic_rank": 71,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "sort_col": "city",
+        "direction": "ASC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0052",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "col_name": "is_express",
+        "predicate_op": "NEQ",
+        "value": false
+      },
+      "columns": [
+        "amount"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0053",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "warehouses"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "shipments"
+          },
+          "left_col": "wh_id",
+          "right_col": "wh_id"
+        },
+        "col_name": "zone",
+        "predicate_op": "EQ",
+        "value": "Central"
+      },
+      "columns": [
+        "capacity",
+        "wh_id",
+        "zone"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0054",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 1,
+    "semantic_rank": 1,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "customers"
+    }
+  },
+  {
+    "task_id": "dev_0055",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": 184,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "col_name": "amount",
+          "predicate_op": "NEQ",
+          "value": 206.35
+        },
+        "sort_col": "amount",
+        "direction": "DESC"
+      },
+      "limit": 4
+    }
+  },
+  {
+    "task_id": "dev_0056",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "cost",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0057",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 84,
+    "semantic_rank": 84,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "orders"
+      },
+      "columns": [
+        "order_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0058",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": 177,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "col_name": "cust_id",
+          "predicate_op": "GT",
+          "value": 3
+        },
+        "sort_col": "cust_id",
+        "direction": "DESC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0059",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "shipment_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0060",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "FILTER",
+      "source": {
+        "op": "SCAN",
+        "table_name": "orders"
+      },
+      "col_name": "cust_id",
+      "predicate_op": "LT",
+      "value": 9
+    }
+  },
+  {
+    "task_id": "dev_0061",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 214,
+    "semantic_rank": 214,
+    "gold_dict": {
+      "op": "COUNT",
+      "source": {
+        "op": "GROUP_BY",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "group_cols": [
+          "wh_id"
+        ]
+      },
+      "as_col": "total_cnt"
+    }
+  },
+  {
+    "task_id": "dev_0062",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "customers"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "orders"
+              },
+              "left_col": "customer_id",
+              "right_col": "cust_id"
+            },
+            "group_cols": [
+              "city"
+            ]
+          },
+          "agg_col": "order_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0063",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 2,
+    "semantic_rank": 2,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "students"
+    }
+  },
+  {
+    "task_id": "dev_0064",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "warehouses"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "left_col": "wh_id",
+        "right_col": "wh_id"
+      },
+      "columns": [
+        "cost",
+        "right.wh_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0065",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": 1151,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "left_col": "student_id",
+          "right_col": "stu_id"
+        },
+        "col_name": "stu_id",
+        "predicate_op": "LT",
+        "value": 2
+      },
+      "columns": [
+        "course_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0066",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 4,
+    "semantic_rank": 4,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "courses"
+      },
+      "columns": [
+        "stu_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0067",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "shipments"
+          },
+          "col_name": "shipment_id",
+          "predicate_op": "LT",
+          "value": 1007
+        },
+        "sort_col": "weight_kg",
+        "direction": "ASC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0068",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "left_col": "customer_id",
+          "right_col": "cust_id"
+        },
+        "col_name": "loyalty_level",
+        "predicate_op": "GT",
+        "value": 2
+      },
+      "columns": [
+        "amount",
+        "city",
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0069",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 2,
+    "semantic_rank": 2,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "students"
+    }
+  },
+  {
+    "task_id": "dev_0070",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "col_name": "shipment_id",
+        "predicate_op": "LT",
+        "value": 1019
+      },
+      "columns": [
+        "shipment_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0071",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "courses"
+          },
+          "left_col": "student_id",
+          "right_col": "stu_id"
+        },
+        "col_name": "course_id",
+        "predicate_op": "GT",
+        "value": 1017
+      },
+      "columns": [
+        "course_id",
+        "major",
+        "score"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0072",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 2,
+    "semantic_rank": 2,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "students"
+    }
+  },
+  {
+    "task_id": "dev_0073",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "col_name": "loyalty_level",
+        "predicate_op": "GT",
+        "value": 1
+      },
+      "columns": [
+        "customer_id",
+        "loyalty_level",
+        "city"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0074",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "customers"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "orders"
+              },
+              "left_col": "customer_id",
+              "right_col": "cust_id"
+            },
+            "group_cols": [
+              "city"
+            ]
+          },
+          "agg_col": "amount",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0075",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "FILTER",
+      "source": {
+        "op": "SCAN",
+        "table_name": "shipments"
+      },
+      "col_name": "shipment_id",
+      "predicate_op": "EQ",
+      "value": 1014
+    }
+  },
+  {
+    "task_id": "dev_0076",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 210,
+    "semantic_rank": 210,
+    "gold_dict": {
+      "op": "COUNT",
+      "source": {
+        "op": "GROUP_BY",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "group_cols": [
+          "shipment_id"
+        ]
+      },
+      "as_col": "total_cnt"
+    }
+  },
+  {
+    "task_id": "dev_0077",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "customers"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "orders"
+              },
+              "left_col": "customer_id",
+              "right_col": "cust_id"
+            },
+            "group_cols": [
+              "city"
+            ]
+          },
+          "agg_col": "customer_id",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0078",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 191,
+    "semantic_rank": 191,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SCAN",
+          "table_name": "warehouses"
+        },
+        "sort_col": "zone",
+        "direction": "ASC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0079",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 200,
+    "semantic_rank": 200,
+    "gold_dict": {
+      "op": "COUNT",
+      "source": {
+        "op": "GROUP_BY",
+        "source": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "group_cols": [
+          "city"
+        ]
+      },
+      "as_col": "total_cnt"
+    }
+  },
+  {
+    "task_id": "dev_0080",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "warehouses"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "shipments"
+              },
+              "left_col": "wh_id",
+              "right_col": "wh_id"
+            },
+            "group_cols": [
+              "zone"
+            ]
+          },
+          "agg_col": "capacity",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0081",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 110,
+    "semantic_rank": 110,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "sort_col": "wh_id",
+        "direction": "DESC"
+      },
+      "limit": 3
+    }
+  },
+  {
+    "task_id": "dev_0082",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "left_col": "customer_id",
+        "right_col": "cust_id"
+      },
+      "columns": [
+        "city",
+        "cust_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0083",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "students"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "courses"
+              },
+              "left_col": "student_id",
+              "right_col": "stu_id"
+            },
+            "group_cols": [
+              "major"
+            ]
+          },
+          "agg_col": "score",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0084",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 1,
+    "semantic_rank": 1,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "shipments"
+    }
+  },
+  {
+    "task_id": "dev_0085",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "SCAN",
+            "table_name": "students"
+          },
+          "col_name": "student_id",
+          "predicate_op": "LT",
+          "value": 10
+        },
+        "sort_col": "major",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0086",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "left_col": "customer_id",
+          "right_col": "cust_id"
+        },
+        "col_name": "loyalty_level",
+        "predicate_op": "LT",
+        "value": 4
+      },
+      "columns": [
+        "loyalty_level",
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0087",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "courses"
+      },
+      "columns": [
+        "stu_id",
+        "course_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0088",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "students"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "courses"
+        },
+        "left_col": "student_id",
+        "right_col": "stu_id"
+      },
+      "columns": [
+        "course_id",
+        "score",
+        "major"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0089",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "students"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "courses"
+              },
+              "left_col": "student_id",
+              "right_col": "stu_id"
+            },
+            "group_cols": [
+              "major"
+            ]
+          },
+          "agg_col": "credits",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 2
+    }
+  },
+  {
+    "task_id": "dev_0090",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 3,
+    "semantic_rank": 3,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "SCAN",
+        "table_name": "customers"
+      },
+      "columns": [
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0091",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "warehouses"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "left_col": "wh_id",
+        "right_col": "wh_id"
+      },
+      "columns": [
+        "weight_kg",
+        "shipment_id",
+        "cost"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0092",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "LIMIT",
+      "source": {
+        "op": "SORT",
+        "source": {
+          "op": "SUM",
+          "source": {
+            "op": "GROUP_BY",
+            "source": {
+              "op": "JOIN",
+              "left": {
+                "op": "SCAN",
+                "table_name": "students"
+              },
+              "right": {
+                "op": "SCAN",
+                "table_name": "courses"
+              },
+              "left_col": "student_id",
+              "right_col": "stu_id"
+            },
+            "group_cols": [
+              "major"
+            ]
+          },
+          "agg_col": "credits",
+          "as_col": "agg_metric"
+        },
+        "sort_col": "agg_metric",
+        "direction": "DESC"
+      },
+      "limit": 5
+    }
+  },
+  {
+    "task_id": "dev_0093",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 1,
+    "semantic_rank": 1,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "shipments"
+    }
+  },
+  {
+    "task_id": "dev_0094",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "col_name": "loyalty_level",
+        "predicate_op": "LT",
+        "value": 5
+      },
+      "columns": [
+        "city",
+        "loyalty_level",
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0095",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "left_col": "customer_id",
+          "right_col": "cust_id"
+        },
+        "col_name": "cust_id",
+        "predicate_op": "GT",
+        "value": 3
+      },
+      "columns": [
+        "city"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0096",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 172,
+    "semantic_rank": 172,
+    "gold_dict": {
+      "op": "FILTER",
+      "source": {
+        "op": "SCAN",
+        "table_name": "students"
+      },
+      "col_name": "grade_year",
+      "predicate_op": "LT",
+      "value": 3
+    }
+  },
+  {
+    "task_id": "dev_0097",
+    "complexity": "MEDIUM",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "JOIN",
+        "left": {
+          "op": "SCAN",
+          "table_name": "customers"
+        },
+        "right": {
+          "op": "SCAN",
+          "table_name": "orders"
+        },
+        "left_col": "customer_id",
+        "right_col": "cust_id"
+      },
+      "columns": [
+        "cust_id",
+        "loyalty_level"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0098",
+    "complexity": "COMPLEX",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": null,
+    "semantic_rank": null,
+    "gold_dict": {
+      "op": "PROJECT",
+      "source": {
+        "op": "FILTER",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "left_col": "customer_id",
+          "right_col": "cust_id"
+        },
+        "col_name": "customer_id",
+        "predicate_op": "LT",
+        "value": 3
+      },
+      "columns": [
+        "cust_id",
+        "order_id",
+        "customer_id"
+      ]
+    }
+  },
+  {
+    "task_id": "dev_0099",
+    "complexity": "SIMPLE",
+    "valid": true,
+    "executes": true,
+    "representable": true,
+    "unrep_reason": null,
+    "structural_rank": 1,
+    "semantic_rank": 1,
+    "gold_dict": {
+      "op": "SCAN",
+      "table_name": "customers"
+    }
+  }
+]

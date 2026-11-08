@@ -1,7 +1,7 @@
 """随机搜索基线求解器。
 
 在相同的 MiniRel 语法与复杂度空间内进行带种子伪随机采样，
-用于作为确定性枚举与后续学习策略的对比基线。
+使用统一的 MiniRelGrammar 作为单一事实来源。
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ from ..dsl.ast import (
     SumNode,
     TypeErrorAST,
 )
+from ..dsl.grammar import DEFAULT_GRAMMAR, MiniRelGrammar
 from ..dsl.types import DataType, PredicateOp, SortDirection
 from ..generator.tasks import TaskSpec
 from ..verifier.execution import ProgramVerifier
@@ -31,9 +32,15 @@ from .common import BaseSolver, CandidateRecord, SearchBudget, SearchResult
 class RandomSearchSolver(BaseSolver):
     """伪随机采样解算器。"""
 
-    def __init__(self, name: str = "random", base_seed: int = 1337) -> None:
+    def __init__(
+        self,
+        name: str = "random",
+        base_seed: int = 1337,
+        grammar: Optional[MiniRelGrammar] = None,
+    ) -> None:
         super().__init__(name=name)
         self.base_seed = base_seed
+        self.grammar = grammar or DEFAULT_GRAMMAR
         self.verifier = ProgramVerifier()
 
     def solve(self, task: TaskSpec, budget: SearchBudget) -> SearchResult:
@@ -133,16 +140,18 @@ class RandomSearchSolver(BaseSolver):
             if op == "filter":
                 col = rng.choice(base_schema.columns)
                 val = self._sample_col_val(col.data_type, task, col.name, rng)
-                pred_op = rng.choice([PredicateOp.EQ, PredicateOp.GT, PredicateOp.LT])
+                pred_op = rng.choice([PredicateOp.EQ, PredicateOp.GT, PredicateOp.LT, PredicateOp.NEQ])
                 return FilterNode(scan, col.name, pred_op, val)
             elif op == "project":
-                k = rng.randint(1, len(base_schema.columns))
+                max_w = min(len(base_schema.columns), self.grammar.MAX_PROJECTION_WIDTH)
+                k = rng.randint(1, max_w)
                 cols = tuple(rng.sample(base_schema.column_names, k))
                 return ProjectNode(scan, cols)
             else:
                 col = rng.choice(base_schema.column_names)
-                direction = rng.choice([SortDirection.ASC, SortDirection.DESC])
-                return LimitNode(SortNode(scan, col, direction), limit=rng.choice([2, 3, 5]))
+                direction = rng.choice(self.grammar.SORT_DIRECTIONS)
+                lim = rng.choice(self.grammar.LIMIT_VALUES)
+                return LimitNode(SortNode(scan, col, direction), limit=lim)
 
         elif depth == 3:
             op = rng.choice(["join", "filter_project", "groupby_agg"])
@@ -150,7 +159,6 @@ class RandomSearchSolver(BaseSolver):
                 t1, t2 = table_names[0], table_names[1]
                 s1, s2 = task.schemas[t1], task.schemas[t2]
                 c1 = rng.choice(s1.columns)
-                # 尽量选同类型
                 c2_cand = [c for c in s2.columns if c.data_type == c1.data_type]
                 c2 = rng.choice(c2_cand) if c2_cand else rng.choice(s2.columns)
                 return JoinNode(ScanNode(t1), ScanNode(t2), c1.name, c2.name)
@@ -160,7 +168,8 @@ class RandomSearchSolver(BaseSolver):
                 col = rng.choice(base_schema.columns)
                 val = self._sample_col_val(col.data_type, task, col.name, rng)
                 filt = FilterNode(scan, col.name, PredicateOp.EQ, val)
-                k = rng.randint(1, len(base_schema.columns))
+                max_w = min(len(base_schema.columns), self.grammar.MAX_PROJECTION_WIDTH)
+                k = rng.randint(1, max_w)
                 cols = tuple(rng.sample(base_schema.column_names, k))
                 return ProjectNode(filt, cols)
 
@@ -169,21 +178,21 @@ class RandomSearchSolver(BaseSolver):
                 grp_col = rng.choice(base_schema.column_names)
                 grp = GroupByNode(scan, (grp_col,))
                 if rng.random() < 0.5:
-                    return CountNode(grp, as_col="cnt")
+                    return CountNode(grp, as_col=self.grammar.COUNT_ALIAS)
                 else:
                     num_cols = [c.name for c in base_schema.columns if c.data_type in (DataType.INT, DataType.FLOAT)]
                     agg_col = rng.choice(num_cols) if num_cols else base_schema.column_names[0]
-                    return SumNode(grp, agg_col, as_col="sum_val")
+                    return SumNode(grp, agg_col, as_col=self.grammar.SUM_ALIAS)
 
         else:  # depth 4
-            # 复合连接与过滤
             if len(table_names) >= 2:
                 t1, t2 = table_names[0], table_names[1]
                 s1, s2 = task.schemas[t1], task.schemas[t2]
                 join = JoinNode(ScanNode(t1), ScanNode(t2), s1.columns[0].name, s2.columns[0].name)
                 try:
                     s_join = join.validate_types(task.schemas)
-                    cols = tuple(rng.sample(s_join.column_names, min(2, len(s_join.columns))))
+                    max_w = min(len(s_join.columns), self.grammar.MAX_PROJECTION_WIDTH)
+                    cols = tuple(rng.sample(s_join.column_names, max_w))
                     return ProjectNode(join, cols)
                 except Exception:
                     pass
@@ -202,7 +211,7 @@ class RandomSearchSolver(BaseSolver):
         if data_type == DataType.INT:
             return rng.randint(1, 50)
         if data_type == DataType.FLOAT:
-            return round(rng.uniform(10.0, 100.0), 2)
+            return 100.0
         if data_type == DataType.STR:
             return "Beijing"
         return True

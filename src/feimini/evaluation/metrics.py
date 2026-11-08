@@ -67,6 +67,7 @@ def aggregate_metrics(records: List[TaskEvaluationRecord]) -> Dict[str, Any]:
         avg_exec_solved = 0.0
         avg_cpu_solved = 0.0
 
+    avg_exec_all = float(np.mean([r.candidates_executed for r in records]))
     avg_wall_time = float(np.mean([r.wall_time_sec for r in records]))
     total_wall_time = float(np.sum([r.wall_time_sec for r in records]))
 
@@ -77,6 +78,7 @@ def aggregate_metrics(records: List[TaskEvaluationRecord]) -> Dict[str, Any]:
         "false_acceptance_rate": round(false_acc_rate, 4),
         "abstention_rate": round(abstention_rate, 4),
         "avg_candidates_executed_solved": round(avg_exec_solved, 2),
+        "avg_candidates_executed_all": round(avg_exec_all, 2),
         "avg_cpu_time_solved_sec": round(avg_cpu_solved, 4),
         "avg_wall_time_sec": round(avg_wall_time, 4),
         "total_wall_time_sec": round(total_wall_time, 2),

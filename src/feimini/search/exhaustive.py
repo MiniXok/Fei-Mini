@@ -2,6 +2,7 @@
 
 按 AST 复杂度与深度逐层递增枚举候选程序，
 通过前置静态类型检查与常量有效性剪枝，在预算约束下搜索满足可见示例的程序。
+使用统一的 MiniRelGrammar 作为单一事实来源。
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ from ..dsl.ast import (
     SumNode,
     TypeErrorAST,
 )
+from ..dsl.grammar import DEFAULT_GRAMMAR, MiniRelGrammar
 from ..dsl.types import DataType, PredicateOp, RelationSchema, SortDirection
 from ..generator.tasks import TaskSpec
 from ..verifier.diagnostics import DiagnosticCode
@@ -32,8 +34,13 @@ from .common import BaseSolver, CandidateRecord, SearchBudget, SearchResult
 class ExhaustiveSearchSolver(BaseSolver):
     """确定性穷举枚举解算器。"""
 
-    def __init__(self, name: str = "exhaustive") -> None:
+    def __init__(
+        self,
+        name: str = "exhaustive",
+        grammar: Optional[MiniRelGrammar] = None,
+    ) -> None:
         super().__init__(name=name)
+        self.grammar = grammar or DEFAULT_GRAMMAR
         self.verifier = ProgramVerifier()
 
     def solve(self, task: TaskSpec, budget: SearchBudget) -> SearchResult:
@@ -135,9 +142,10 @@ class ExhaustiveSearchSolver(BaseSolver):
             tbl_name = scan.table_name  # type: ignore
             schema = task.schemas[tbl_name]
 
-            # 投影组合
+            # 投影组合 (支持 1 到 MAX_PROJECTION_WIDTH 列)
             col_names = schema.column_names
-            for k in range(1, min(len(col_names) + 1, 3)):
+            max_proj_w = min(len(col_names), self.grammar.MAX_PROJECTION_WIDTH)
+            for k in range(1, max_proj_w + 1):
                 for cols in itertools.combinations(col_names, k):
                     proj = ProjectNode(scan, cols)
                     level2_nodes.append(proj)
@@ -146,9 +154,9 @@ class ExhaustiveSearchSolver(BaseSolver):
             # 过滤
             for col in schema.columns:
                 vals = constants_by_col.get(col.name, [])
-                for val in vals[:3]:
+                for val in vals[: self.grammar.MAX_CONSTANTS_PER_COLUMN]:
                     if col.data_type in (DataType.INT, DataType.FLOAT):
-                        ops = [PredicateOp.EQ, PredicateOp.GT, PredicateOp.LT]
+                        ops = [PredicateOp.EQ, PredicateOp.GT, PredicateOp.LT, PredicateOp.NEQ]
                     else:
                         ops = [PredicateOp.EQ, PredicateOp.NEQ]
                     for op in ops:
@@ -156,10 +164,10 @@ class ExhaustiveSearchSolver(BaseSolver):
                         level2_nodes.append(filt)
                         yield filt
 
-            # 排序与截断
+            # 排序与截断 (使用完整的 LIMIT_VALUES: 2, 3, 4, 5)
             for col in schema.columns:
-                for direction in [SortDirection.DESC, SortDirection.ASC]:
-                    for lim in [2, 3, 5]:
+                for direction in self.grammar.SORT_DIRECTIONS:
+                    for lim in self.grammar.LIMIT_VALUES:
                         sort_lim = LimitNode(SortNode(scan, col.name, direction), limit=lim)
                         level2_nodes.append(sort_lim)
                         yield sort_lim
@@ -178,20 +186,20 @@ class ExhaustiveSearchSolver(BaseSolver):
                         level3_nodes.append(join)
                         yield join
 
-        # 分组与聚合
+        # 分组与聚合 (统一输出别名)
         for scan in level1_scans:
             tbl_name = scan.table_name  # type: ignore
             schema = task.schemas[tbl_name]
             for col in schema.columns:
                 grp = GroupByNode(scan, (col.name,))
                 # 计数
-                cnt = CountNode(grp, as_col="cnt")
+                cnt = CountNode(grp, as_col=self.grammar.COUNT_ALIAS)
                 level3_nodes.append(cnt)
                 yield cnt
                 # 求和
                 for num_col in schema.columns:
                     if num_col.data_type in (DataType.INT, DataType.FLOAT) and num_col.name != col.name:
-                        sm = SumNode(grp, num_col.name, as_col="sum_val")
+                        sm = SumNode(grp, num_col.name, as_col=self.grammar.SUM_ALIAS)
                         level3_nodes.append(sm)
                         yield sm
 
@@ -200,15 +208,16 @@ class ExhaustiveSearchSolver(BaseSolver):
             if isinstance(node, FilterNode):
                 try:
                     schema = node.validate_types(task.schemas)
-                    for k in range(1, min(len(schema.column_names) + 1, 3)):
+                    max_proj_w = min(len(schema.column_names), self.grammar.MAX_PROJECTION_WIDTH)
+                    for k in range(1, max_proj_w + 1):
                         for cols in itertools.combinations(schema.column_names, k):
                             proj = ProjectNode(node, cols)
                             level3_nodes.append(proj)
                             yield proj
                     # 过滤后排序截断
                     for col in schema.columns:
-                        for direction in [SortDirection.DESC, SortDirection.ASC]:
-                            for lim in [2, 5]:
+                        for direction in self.grammar.SORT_DIRECTIONS:
+                            for lim in self.grammar.LIMIT_VALUES:
                                 sl = LimitNode(SortNode(node, col.name, direction), limit=lim)
                                 level3_nodes.append(sl)
                                 yield sl
@@ -221,7 +230,8 @@ class ExhaustiveSearchSolver(BaseSolver):
                 try:
                     schema = node.validate_types(task.schemas)
                     # 连接后投影
-                    for k in range(1, min(len(schema.column_names) + 1, 3)):
+                    max_proj_w = min(len(schema.column_names), self.grammar.MAX_PROJECTION_WIDTH)
+                    for k in range(1, max_proj_w + 1):
                         for cols in itertools.combinations(schema.column_names, k):
                             yield ProjectNode(node, cols)
 
@@ -230,9 +240,10 @@ class ExhaustiveSearchSolver(BaseSolver):
                     num_cols = [c.name for c in schema.columns if c.data_type in (DataType.INT, DataType.FLOAT)]
                     if str_cols and num_cols:
                         grp = GroupByNode(node, (str_cols[0],))
-                        sm = SumNode(grp, num_cols[0], as_col="agg_metric")
-                        sl = LimitNode(SortNode(sm, "agg_metric", SortDirection.DESC), limit=3)
-                        yield sl
+                        sm = SumNode(grp, num_cols[0], as_col=self.grammar.JOIN_AGG_ALIAS)
+                        for lim in self.grammar.LIMIT_VALUES:
+                            sl = LimitNode(SortNode(sm, self.grammar.JOIN_AGG_ALIAS, SortDirection.DESC), limit=lim)
+                            yield sl
                 except Exception:
                     pass
 

@@ -20,3 +20,13 @@
 - **Context:** Accidental data leakage can invalidate benchmark results.
 - **Decision:** `TaskSpec` provides only schema and visible input/output examples. The gold AST is stored in private evaluator records (`EvaluatorTaskData`). Unit tests enforce that solver methods receive only `TaskSpec`.
 - **Reasoning:** Eliminates contamination and guarantees valid scientific benchmarking.
+
+## ADR-005: Search Space Harmonization via Unified Grammar Specification (M4.6)
+- **Context:** The M4.5 audit discovered that 73% of gold ASTs were unrepresentable by the initial enumerator due to discrepancies in limit values (`[2, 3, 5]` vs `[2, 3, 4, 5]`), column aliases (`cnt` vs `total_cnt`), and continuous float literals.
+- **Decision:** Implement a centralized `MiniRelGrammar` (`src/feimini/dsl/grammar.py` and `docs/MINIREL_GRAMMAR.md`) as the single source of truth for `ProgramGenerator`, `ExhaustiveSearchSolver`, and `RandomSearchSolver`. Filter literals are sampled directly from non-null database values.
+- **Reasoning:** Guarantees 100% gold AST representability and ensures that measured benchmark difficulty reflects genuine combinatorial complexity rather than artificial vocabulary truncation.
+
+## ADR-006: Explicit Dataset Versioning (`feimini-mini-rel-v2`)
+- **Context:** Correcting the grammar and literal sampling alters dataset generation semantics.
+- **Decision:** Create an isolated, versioned dataset `datasets/v2/` (`feimini-mini-rel-v2`) with independent seeds (`train`: 1042, `dev`: 1142, `test`: 1242), while preserving the historical M4 v1 dataset (`datasets/`) and its SHA-256 manifest unchanged.
+- **Reasoning:** Preserves scientific provenance, prevents historical regression, and allows explicit A/B comparison between v1 and v2 baselines.

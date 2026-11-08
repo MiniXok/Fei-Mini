@@ -1,0 +1,277 @@
+{
+  "struct_solved_count": 27,
+  "struct_solved_ids": [
+    "dev_0003",
+    "dev_0006",
+    "dev_0009",
+    "dev_0018",
+    "dev_0022",
+    "dev_0023",
+    "dev_0024",
+    "dev_0027",
+    "dev_0028",
+    "dev_0033",
+    "dev_0040",
+    "dev_0042",
+    "dev_0049",
+    "dev_0051",
+    "dev_0057",
+    "dev_0063",
+    "dev_0066",
+    "dev_0069",
+    "dev_0073",
+    "dev_0075",
+    "dev_0076",
+    "dev_0081",
+    "dev_0084",
+    "dev_0087",
+    "dev_0090",
+    "dev_0096",
+    "dev_0099"
+  ],
+  "semantic_solved_count": 33,
+  "semantic_solved_ids": [
+    "dev_0003",
+    "dev_0006",
+    "dev_0009",
+    "dev_0012",
+    "dev_0018",
+    "dev_0020",
+    "dev_0022",
+    "dev_0023",
+    "dev_0024",
+    "dev_0027",
+    "dev_0028",
+    "dev_0033",
+    "dev_0040",
+    "dev_0042",
+    "dev_0046",
+    "dev_0049",
+    "dev_0051",
+    "dev_0052",
+    "dev_0054",
+    "dev_0057",
+    "dev_0063",
+    "dev_0066",
+    "dev_0069",
+    "dev_0073",
+    "dev_0075",
+    "dev_0076",
+    "dev_0081",
+    "dev_0084",
+    "dev_0085",
+    "dev_0087",
+    "dev_0090",
+    "dev_0096",
+    "dev_0099"
+  ],
+  "alternate_solved_count": 6,
+  "alternate_details": [
+    {
+      "task_id": "dev_0012",
+      "complexity": "SIMPLE",
+      "structural_rank": null,
+      "semantic_rank": 1,
+      "gold_ast": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "shipments"
+        },
+        "col_name": "wh_id",
+        "predicate_op": "LT",
+        "value": 30
+      },
+      "solving_cand": {
+        "op": "SCAN",
+        "table_name": "shipments"
+      }
+    },
+    {
+      "task_id": "dev_0020",
+      "complexity": "COMPLEX",
+      "structural_rank": null,
+      "semantic_rank": 1415,
+      "gold_ast": {
+        "op": "PROJECT",
+        "source": {
+          "op": "FILTER",
+          "source": {
+            "op": "JOIN",
+            "left": {
+              "op": "SCAN",
+              "table_name": "customers"
+            },
+            "right": {
+              "op": "SCAN",
+              "table_name": "orders"
+            },
+            "left_col": "customer_id",
+            "right_col": "cust_id"
+          },
+          "col_name": "order_id",
+          "predicate_op": "GT",
+          "value": 10
+        },
+        "columns": [
+          "customer_id",
+          "loyalty_level"
+        ]
+      },
+      "solving_cand": {
+        "op": "PROJECT",
+        "source": {
+          "op": "JOIN",
+          "left": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "right": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "left_col": "customer_id",
+          "right_col": "cust_id"
+        },
+        "columns": [
+          "customer_id",
+          "loyalty_level"
+        ]
+      }
+    },
+    {
+      "task_id": "dev_0046",
+      "complexity": "MEDIUM",
+      "structural_rank": null,
+      "semantic_rank": 64,
+      "gold_ast": {
+        "op": "LIMIT",
+        "source": {
+          "op": "SORT",
+          "source": {
+            "op": "FILTER",
+            "source": {
+              "op": "SCAN",
+              "table_name": "shipments"
+            },
+            "col_name": "weight_kg",
+            "predicate_op": "LT",
+            "value": 212.37
+          },
+          "sort_col": "weight_kg",
+          "direction": "ASC"
+        },
+        "limit": 2
+      },
+      "solving_cand": {
+        "op": "LIMIT",
+        "source": {
+          "op": "SORT",
+          "source": {
+            "op": "SCAN",
+            "table_name": "shipments"
+          },
+          "sort_col": "weight_kg",
+          "direction": "ASC"
+        },
+        "limit": 2
+      }
+    },
+    {
+      "task_id": "dev_0052",
+      "complexity": "MEDIUM",
+      "structural_rank": null,
+      "semantic_rank": 41,
+      "gold_ast": {
+        "op": "LIMIT",
+        "source": {
+          "op": "SORT",
+          "source": {
+            "op": "FILTER",
+            "source": {
+              "op": "SCAN",
+              "table_name": "customers"
+            },
+            "col_name": "loyalty_level",
+            "predicate_op": "NEQ",
+            "value": 2
+          },
+          "sort_col": "city",
+          "direction": "DESC"
+        },
+        "limit": 5
+      },
+      "solving_cand": {
+        "op": "LIMIT",
+        "source": {
+          "op": "SORT",
+          "source": {
+            "op": "SCAN",
+            "table_name": "customers"
+          },
+          "sort_col": "city",
+          "direction": "DESC"
+        },
+        "limit": 5
+      }
+    },
+    {
+      "task_id": "dev_0054",
+      "complexity": "SIMPLE",
+      "structural_rank": null,
+      "semantic_rank": 2,
+      "gold_ast": {
+        "op": "FILTER",
+        "source": {
+          "op": "SCAN",
+          "table_name": "students"
+        },
+        "col_name": "student_id",
+        "predicate_op": "LT",
+        "value": 50
+      },
+      "solving_cand": {
+        "op": "SCAN",
+        "table_name": "students"
+      }
+    },
+    {
+      "task_id": "dev_0085",
+      "complexity": "MEDIUM",
+      "structural_rank": null,
+      "semantic_rank": 111,
+      "gold_ast": {
+        "op": "LIMIT",
+        "source": {
+          "op": "SORT",
+          "source": {
+            "op": "FILTER",
+            "source": {
+              "op": "SCAN",
+              "table_name": "orders"
+            },
+            "col_name": "is_express",
+            "predicate_op": "EQ",
+            "value": true
+          },
+          "sort_col": "is_express",
+          "direction": "ASC"
+        },
+        "limit": 3
+      },
+      "solving_cand": {
+        "op": "LIMIT",
+        "source": {
+          "op": "SORT",
+          "source": {
+            "op": "SCAN",
+            "table_name": "orders"
+          },
+          "sort_col": "is_express",
+          "direction": "DESC"
+        },
+        "limit": 3
+      }
+    }
+  ]
+}

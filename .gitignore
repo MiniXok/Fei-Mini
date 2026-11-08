@@ -38,8 +38,14 @@ datasets/dev/
 datasets/test/
 !datasets/test_manifest.json
 
+datasets/v2/train/
+datasets/v2/dev/
+datasets/v2/test/
+!datasets/v2/test_manifest.json
+
 # Raw evaluation execution traces
 results/raw/
+results/v2/raw/
 
 # Editor artifacts
 .vscode/

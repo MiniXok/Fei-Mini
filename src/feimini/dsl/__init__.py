@@ -1,6 +1,7 @@
 """MiniRel 领域特定语言 (DSL) 模块。"""
 
 from .types import DataType, Column, RelationSchema, Table, PredicateOp, SortDirection
+from .grammar import MiniRelGrammar, DEFAULT_GRAMMAR
 from .ast import (
     ASTNode,
     ScanNode,

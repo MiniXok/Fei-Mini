@@ -3,7 +3,7 @@
 **Date:** 2026-11-08  
 **Project:** Fei-Mini (MiniXok Research)  
 **Experiment:** 001 — Learned Search vs Deterministic Search  
-**Dataset:** Dev Set (100 evaluated tasks across 3 complexity tiers)  
+**Datasets:** Dev Set v1 (`datasets/dev/`) & Harmonized Dev Set v2 (`datasets/v2/dev/`)  
 **Evaluated Solvers:** Exhaustive Enumeration, Random Search  
 **Evaluation Budgets:** 32, 128, 512, 2048 candidates  
 
@@ -11,97 +11,71 @@
 
 ## 1. Executive Summary
 
-This report characterizes the baseline computational tractability of discovering correct programs in the MiniRel relational DSL without learned guidance.
+This report characterizes the baseline computational tractability of discovering correct relational programs in the MiniRel DSL without learned guidance across two dataset iterations:
+1. **v1 (Initial M4 Baseline):** Unaligned grammar; 73% of gold ASTs were unrepresentable by the enumerator.
+2. **v2 (Harmonized M4.6 Baseline):** Unified `MiniRelGrammar`; 100% of gold ASTs are valid, typed, and representable in the declared search space.
 
-### Key Empirical Findings
-1. **Exponential Scaling Bottleneck:** Uninformed deterministic enumeration exhibits an exponential decay in solve rate as AST composition depth increases.
-   - At a 32-candidate budget, both solvers fail on 100% of `MEDIUM` and `COMPLEX` tasks.
-   - At a 2048-candidate budget, Exhaustive Enumeration achieves only **27.3%** on `MEDIUM` and **6.1%** on `COMPLEX` tasks (overall solve rate: **33.0%**).
-   - Random Search fails completely (**0.0%**) on `COMPLEX` tasks across all candidate budgets up to 2048.
-2. **High Semantic Generalization Fidelity:** Of the tasks solved by exhaustive enumeration on observed examples, **97.0% (32/33)** generalize to unseen hidden database instances (False Acceptance Rate <= 1.0%), demonstrating that the 3-example specification provides sound semantic constraints.
-3. **Research Gate Decision:** **Learned search is strongly justified.** The search problem cannot be solved cheaply by naive enumeration or uniform sampling for composed operations (depth >= 3), providing a clean, non-trivial benchmark where a small ranking policy can demonstrate significant computational leverage.
-
----
-
-## 2. Experimental Setup
-
-### Dataset Partitioning & Hold-Out
-- **Train Set:** 1,000 tasks (Seed 42)
-- **Dev Set:** 200 tasks (Seed 142, 100 evaluated in this run)
-- **Test Set:** 200 tasks (Seed 242, Hash-locked: `datasets/test_manifest.json`)
-- **Composition Distribution:** 34% `SIMPLE` (depth 1-2), 33% `MEDIUM` (depth 2-3), 33% `COMPLEX` (depth 3-5).
-- **Leakage Safeguards:** Solvers interact exclusively with `TaskSpec` (containing only input schemas and visible input/output table examples). Gold ASTs and hidden evaluation databases are strictly quarantined.
+### Key Scientific Conclusions
+1. **The Combinatorial Search Bottleneck is Real and Severe:**
+   - On the harmonized v2 benchmark, Exhaustive Enumeration achieves only **3.0% (1/33)** on `COMPLEX` queries and **30.3% (10/33)** on `MEDIUM` queries at candidate budget 2,048.
+   - Random Search achieves **0.0% (0/33)** on `COMPLEX` queries and **30.3% (10/33)** on `MEDIUM` queries.
+   - **61% of all tasks remain completely unsolved** by exhaustive enumeration under budget 2,048, proving that combinatorial breadth at depth $\ge 3$ is the fundamental bottleneck, not grammar omission.
+2. **Zero False Acceptance on v2:**
+   - Under harmonized observed constant sampling, False Acceptance Rate is **0.0%** across all 800 evaluations in v2. Every candidate that matched visible demonstrations generalized perfectly to hidden validation instances.
+3. **Learned Search is Scientifically Justified:**
+   - Because 97% of complex and 70% of medium queries fail under deterministic enumeration, an intelligent operation-ranking policy has substantial headroom to guide search within modest budgets (e.g. <= 128 candidates).
 
 ---
 
-## 3. Empirical Results
+## 2. Harmonized v2 Baseline Performance Matrix (`feimini-mini-rel-v2`)
 
-### Overall Performance Matrix
+*Evaluated on 100 development tasks from `datasets/v2/dev/` across 4 candidate budgets.*
 
-| Solver | Budget | Example Solve % | Generalization % | False Acc % | Avg Executed (Solved) | Avg Executed (All Tasks)* | Avg CPU Time (Solved) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exhaustive** | 32 | 16.0% | 16.0% | 0.0% | 2.75 | 27.32 | 0.0002 s |
-| **Exhaustive** | 128 | 25.0% | 24.0% | 1.0% | 30.88 | 103.72 | 0.0008 s |
-| **Exhaustive** | 512 | 26.0% | 25.0% | 1.0% | 47.81 | 391.31 | 0.0012 s |
-| **Exhaustive** | 2048 | **33.0%** | **32.0%** | **1.0%** | **311.67** | **1193.28** | **0.0092 s** |
-| **Random** | 32 | 14.0% | 14.0% | 0.0% | 6.93 | 27.86 | 0.0003 s |
-| **Random** | 128 | 19.0% | 18.0% | 1.0% | 27.32 | 105.95 | 0.0014 s |
-| **Random** | 512 | 22.0% | 21.0% | 1.0% | 48.91 | 399.10 | 0.0021 s |
-| **Random** | 2048 | 29.0% | 28.0% | 1.0% | 302.55 | 1500.84 | 0.0127 s |
+| Solver | Budget | Tasks | Ex Solved | Gen Solved | False Acc % | Exec (Solved) | Exec (All Tasks)* | CPU Time (Solved) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Exhaustive** | 32 | 100 | 16 (16%) | 16 (16%) | 0.0% | 4.81 | 27.65 | 0.0002 s |
+| **Exhaustive** | 128 | 100 | 23 (23%) | 23 (23%) | 0.0% | 31.30 | 105.76 | 0.0007 s |
+| **Exhaustive** | 512 | 100 | 36 (36%) | 36 (36%) | 0.0% | 86.75 | 358.91 | 0.0017 s |
+| **Exhaustive** | 2048 | 100 | **39 (39%)** | **39 (39%)** | **0.0%** | **164.38** | **1313.39** | **0.0042 s** |
+| **Random** | 32 | 100 | 12 (12%) | 12 (12%) | 0.0% | 6.75 | 28.04 | 0.0003 s |
+| **Random** | 128 | 100 | 19 (19%) | 19 (19%) | 0.0% | 24.47 | 105.23 | 0.0010 s |
+| **Random** | 512 | 100 | 35 (35%) | 35 (35%) | 0.0% | 151.37 | 376.51 | 0.0056 s |
+| **Random** | 2048 | 100 | **41 (41%)** | **41 (41%)** | **0.0%** | **279.27** | **1289.42** | **0.0104 s** |
 
-*\*Note added in M4.5 Audit: `Avg Executed (Solved)` averages strictly over solved tasks. `Avg Executed (All Tasks)` accounts for budget exhaustion across all 100 evaluated tasks.*
-
----
-
-### M4.5 Scientific Audit Addendum
-An independent scientific audit (documented in `docs/M4_AUDIT.md` and `docs/audit/`) established that:
-1. **Identifiability:** The 3-example specification is sound; 98% of tasks are uniquely identifiable and false acceptance is minimal (1.0% overall, 3.0% among accepted tasks).
-2. **Grammar Alignment:** 73% of gold ASTs were unrepresentable by the initial exhaustive enumerator due to parameter mismatches (`limit=4`, aggregation aliases `as_col`, 3-column projections). Solvers effectively solved 33 out of ~35 representable tasks.
-3. **Verdict:** Conditional Pass. M5 may proceed once grammar parameters are unified.
+*\*`Exec (Solved)`: Mean candidate executions among solved tasks. `Exec (All Tasks)`: Mean executions across all 100 evaluated tasks.*
 
 ---
 
-### Breakdown by Task Complexity
+## 3. Complexity Tier Breakdown (v2 Harmonized)
 
-#### Simple Tasks (Depth 1-2: Scan, Filter, Project, Sort-Limit)
-- **Exhaustive:** 47.1% (32) -> 64.7% (128) -> 64.7% (512) -> 64.7% (2048)
-- **Random:** 41.2% (32) -> 50.0% (128) -> 58.8% (512) -> 73.5% (2048)
-- *Observation:* Simple tasks saturate quickly; random search occasionally discovers simple projections faster than deterministic breadth exploration.
+### Simple Tasks (Depth 1–2: Scan, Filter, Project, Sort-Limit)
+- **Exhaustive:** 47.1% (32) $\rightarrow$ 64.7% (128) $\rightarrow$ 82.3% (512) $\rightarrow$ **82.3% (2048)**
+- **Random:** 32.4% (32) $\rightarrow$ 47.1% (128) $\rightarrow$ 79.4% (512) $\rightarrow$ **91.2% (2048)**
+- *Observation:* Simple queries are largely solved by both methods. At 2048 candidates, random search samples deep permutations that deterministic breadth exploration reaches later.
 
-#### Medium Tasks (Depth 2-3: Filter-Project, GroupBy-Agg, Inner Join)
-- **Exhaustive:** 0.0% (32) -> 9.1% (128) -> 12.1% (512) -> **27.3% (2048)**
-- **Random:** 0.0% (32) -> 6.1% (128) -> 6.1% (512) -> **12.1% (2048)**
-- *Observation:* Combinatorial explosion in join pairs and aggregate combinations causes steep efficiency drops. Over 72% of medium tasks remain unsolved at 2048 evaluations.
+### Medium Tasks (Depth 2–3: Filter-Project, GroupBy-Agg, Inner Join)
+- **Exhaustive:** 0.0% (32) $\rightarrow$ 3.0% (128) $\rightarrow$ 24.2% (512) $\rightarrow$ **30.3% (2048)**
+- **Random:** 3.0% (32) $\rightarrow$ 9.1% (128) $\rightarrow$ 24.2% (512) $\rightarrow$ **30.3% (2048)**
+- *Observation:* Combinatorial explosion in join pairs and aggregate columns causes steep drop-offs. **70% of medium tasks fail** under budget 2048.
 
-#### Complex Tasks (Depth 3-5: Join-Filter-Project, Join-GroupBy-Agg-Sort-Limit)
-- **Exhaustive:** 0.0% (32) -> 0.0% (128) -> 0.0% (512) -> **6.1% (2048)**
-- **Random:** 0.0% (32) -> 0.0% (128) -> 0.0% (512) -> **0.0% (2048)**
-- *Observation:* Without guidance, searching for valid multi-hop relational plans in a bounded budget of 2048 is practically impossible (93.9% failure rate for exhaustive, 100% failure rate for random).
-
----
-
-## 4. Failure Mode Diagnostics
-
-1. **Budget Exhaustion on Multi-Table Joins:**
-   - In complex tasks, selecting the correct join key, subsequent group-by attribute, and numeric aggregate target requires searching through thousands of type-valid combinations.
-2. **False Acceptance is Negligible:**
-   - Only 1 task out of 100 exhibited false acceptance (passing 3 visible examples but failing hidden instances). This confirms that evaluating candidate ASTs over 3 distinct relational instances provides sufficient inductive signal.
-3. **CPU Execution Overhead:**
-   - Average execution time per candidate is ~0.02 ms. The search bottleneck is combinatorial breadth, not interpreter latency.
+### Complex Tasks (Depth 3–5: Multi-table Join + Filter + GroupBy + Agg + Sort-Limit)
+- **Exhaustive:** 0.0% (32) $\rightarrow$ 0.0% (128) $\rightarrow$ 0.0% (512) $\rightarrow$ **3.0% (2048)** (1 / 33 solved)
+- **Random:** 0.0% (32) $\rightarrow$ 0.0% (128) $\rightarrow$ 0.0% (512) $\rightarrow$ **0.0% (2048)** (0 / 33 solved)
+- *Observation:* Uninformed search is completely paralyzed on complex composed queries (**97% failure rate for exhaustive, 100% failure rate for random**).
 
 ---
 
-## 5. Milestone 4 Gate Decision
+## 4. Historical M4 v1 Baseline Archive (`datasets/dev/`)
 
-### Question: Is a Learned Search Policy Justified?
-**YES.**
-The empirical evidence proves:
-- The relational search space is NOT trivial.
-- Simple tasks are solvable, but compositionally realistic relational queries (medium and complex) suffer from catastrophic combinatorial explosion under deterministic and random search.
-- A learned ranking policy that can predict likely next operations (e.g. prioritizing `JOIN` on foreign keys, selecting likely aggregate targets based on schema and output shapes) has massive headroom to reduce search cost and increase solve rates within modest budgets (e.g., <= 128 candidates).
+*Retained for scientific provenance from the original M4 milestone before M4.6 grammar harmonization.*
 
-### Recommendations for Next Milestone (M5: Learned Search Controller)
-1. **Architecture:** Implement a lightweight neural or tree-based state-action ranker that takes search state (current AST prefix, candidate operators, input/output column types) and outputs priority logits.
-2. **Action Space:** Restrict actions to valid next-step relational operators and candidate column bindings.
-3. **Training Data:** Supervised behavioral cloning on the 1,000 generated training tasks (`datasets/train/`).
-4. **Evaluation:** Evaluate whether the learned controller can achieve >50% on `MEDIUM` and >30% on `COMPLEX` within a tiny budget of 128 candidates.
+| Solver | Budget | Example Solve % | Generalization % | False Acc % | Avg Executed (Solved) | Avg Executed (All) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Exhaustive** | 32 | 16.0% | 16.0% | 0.0% | 2.75 | 27.32 |
+| **Exhaustive** | 128 | 25.0% | 24.0% | 1.0% | 30.88 | 103.72 |
+| **Exhaustive** | 512 | 26.0% | 25.0% | 1.0% | 47.81 | 391.31 |
+| **Exhaustive** | 2048 | 33.0% | 32.0% | 1.0% | 311.67 | 1193.28 |
+| **Random** | 32 | 14.0% | 14.0% | 0.0% | 6.93 | 27.86 |
+| **Random** | 128 | 19.0% | 18.0% | 1.0% | 27.32 | 105.95 |
+| **Random** | 512 | 22.0% | 21.0% | 1.0% | 48.91 | 399.10 |
+| **Random** | 2048 | 29.0% | 28.0% | 1.0% | 302.55 | 1500.84 |

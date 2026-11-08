@@ -170,6 +170,7 @@ class BenchmarkRunner:
             "false_acceptance_rate",
             "abstention_rate",
             "avg_candidates_executed_solved",
+            "avg_candidates_executed_all",
             "avg_cpu_time_solved_sec",
             "avg_wall_time_sec",
             "total_wall_time_sec",
@@ -186,6 +187,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Fei-Mini Benchmark Runner")
     parser.add_argument("--tasks-dir", type=str, default="datasets/dev", help="Path to tasks directory")
     parser.add_argument("--run-name", type=str, default="baseline_dev", help="Run identifier name")
+    parser.add_argument("--raw-dir", type=str, default="results/raw", help="Directory for raw JSONL results")
+    parser.add_argument("--report-dir", type=str, default="results/reports", help="Directory for summary reports")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of tasks")
     parser.add_argument("--budgets", type=int, nargs="+", default=[32, 128, 512, 2048])
     args = parser.parse_args()
@@ -193,6 +196,8 @@ def main() -> None:
     runner = BenchmarkRunner(
         tasks_dir=args.tasks_dir,
         budgets=args.budgets,
+        raw_output_dir=args.raw_dir,
+        report_output_dir=args.report_dir,
     )
     result = runner.run(run_name=args.run_name, limit_tasks=args.limit)
     print("\nBenchmark Finished Successfully!")

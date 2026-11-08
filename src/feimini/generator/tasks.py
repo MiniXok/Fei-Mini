@@ -190,6 +190,7 @@ class TaskGenerator:
         tasks: List[EvaluatorTaskData],
         dataset_seed: int,
         manifest_path: str,
+        dataset_version: str = "feimini-mini-rel-v1",
     ) -> Dict[str, Any]:
         """为测试集生成防篡改 SHA-256 哈希锁定清单。"""
         task_fingerprints = []
@@ -206,6 +207,7 @@ class TaskGenerator:
             })
 
         manifest = {
+            "dataset_version": dataset_version,
             "dataset_seed": dataset_seed,
             "task_count": len(tasks),
             "manifest_hash": hasher.hexdigest(),
