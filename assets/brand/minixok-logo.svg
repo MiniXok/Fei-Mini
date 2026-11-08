@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="600" height="160">
+  <defs>
+    <linearGradient id="orgBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#0e131d"/>
+    </linearGradient>
+    <linearGradient id="xGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+    <linearGradient id="xGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00e5a3"/>
+      <stop offset="100%" stop-color="#38ef7d"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="160" rx="20" fill="url(#orgBg)"/>
+  <rect width="598" height="158" x="1" y="1" rx="19" fill="none" stroke="#1d2535" stroke-width="1.5"/>
+
+  <!-- Geometric Symbol (The MiniXok "X" Convergence) -->
+  <g transform="translate(45, 35)">
+    <!-- Diagonal stroke 1 -->
+    <path d="M15 15 L75 75" stroke="url(#xGrad1)" stroke-width="14" stroke-linecap="round"/>
+    <!-- Diagonal stroke 2 -->
+    <path d="M75 15 L15 75" stroke="url(#xGrad2)" stroke-width="14" stroke-linecap="round"/>
+    <!-- Central Kernel -->
+    <circle cx="45" cy="45" r="8" fill="#0a0d14" stroke="#ffffff" stroke-width="3"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="160" y="82" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" letter-spacing="1.5" fill="#ffffff">MiniXok</text>
+
+  <!-- Subtitle -->
+  <text x="162" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" letter-spacing="2" fill="#6c7d93">INDEPENDENT OPEN-SOURCE AI LAB</text>
+</svg>

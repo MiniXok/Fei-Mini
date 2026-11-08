@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <defs>
+    <linearGradient id="previewBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080a0f"/>
+      <stop offset="60%" stop-color="#0d111a"/>
+      <stop offset="100%" stop-color="#141a27"/>
+    </linearGradient>
+    <linearGradient id="cyanAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+    <linearGradient id="emeraldAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5a3"/>
+      <stop offset="100%" stop-color="#00b894"/>
+    </linearGradient>
+    <linearGradient id="spineAccent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="50%" stop-color="#00e5a3"/>
+      <stop offset="100%" stop-color="#38ef7d"/>
+    </linearGradient>
+    <pattern id="techGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#previewBg)"/>
+  <rect width="1280" height="640" fill="url(#techGrid)"/>
+
+  <!-- Top Lab Badge -->
+  <g transform="translate(100, 75)">
+    <rect width="170" height="32" rx="16" fill="#161f30" stroke="#253550" stroke-width="1"/>
+    <!-- MiniXok Symbol -->
+    <path d="M18 10 L28 22 M28 10 L18 22" stroke="#00e5a3" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="36" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="700" letter-spacing="1.5" fill="#a0aec0">MINIXOK LAB</text>
+  </g>
+
+  <!-- Main Left Content Block -->
+  <g transform="translate(100, 140)">
+    <!-- Fei-Mini Title & Version Badge -->
+    <text x="0" y="80" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'SF Pro Display', Roboto, sans-serif" font-size="76" font-weight="900" letter-spacing="2" fill="#ffffff">FEI-MINI</text>
+    <rect x="360" y="32" width="76" height="30" rx="8" fill="#00e5a3" fill-opacity="0.15" stroke="#00e5a3" stroke-width="1.5"/>
+    <text x="398" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="800" fill="#00e5a3" text-anchor="middle">v0.1.0</text>
+
+    <!-- Tagline -->
+    <text x="2" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="700" letter-spacing="0.5" fill="#00e5a3">Small Models. Structured Reasoning. Verified Results.</text>
+
+    <!-- Supporting Description -->
+    <text x="2" y="195" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="400" fill="#94a3b8">A local natural-language interface for SQLite, powered by typed computation and CPU-first AI.</text>
+
+    <!-- Feature Pills -->
+    <g transform="translate(2, 250)">
+      <!-- Pill 1 -->
+      <rect x="0" y="0" width="130" height="34" rx="17" fill="#141c2b" stroke="#253550" stroke-width="1"/>
+      <text x="65" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#cbd5e1" text-anchor="middle">100% Offline</text>
+
+      <!-- Pill 2 -->
+      <rect x="145" y="0" width="115" height="34" rx="17" fill="#141c2b" stroke="#253550" stroke-width="1"/>
+      <text x="202" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#cbd5e1" text-anchor="middle">CPU-First</text>
+
+      <!-- Pill 3 -->
+      <rect x="275" y="0" width="165" height="34" rx="17" fill="#141c2b" stroke="#253550" stroke-width="1"/>
+      <text x="357" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#cbd5e1" text-anchor="middle">Read-Only Safety</text>
+
+      <!-- Pill 4 -->
+      <rect x="455" y="0" width="125" height="34" rx="17" fill="#141c2b" stroke="#253550" stroke-width="1"/>
+      <text x="517" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="600" fill="#cbd5e1" text-anchor="middle">Apache-2.0</text>
+    </g>
+  </g>
+
+  <!-- Right Visual Construction (Geometric Phi / Relational Gateway) -->
+  <g transform="translate(860, 140)">
+    <!-- Ambient Glow Backing -->
+    <circle cx="160" cy="180" r="160" fill="#00e5a3" fill-opacity="0.06"/>
+    <circle cx="160" cy="180" r="110" fill="#00f2fe" fill-opacity="0.05"/>
+
+    <!-- Left Block (Typed AST Node) -->
+    <path d="M50 120 L140 70 L140 310 L50 260 Z" fill="url(#cyanAccent)" fill-opacity="0.85"/>
+    <path d="M50 120 L140 70 L110 50 L20 100 Z" fill="#68d8d6" fill-opacity="0.4"/>
+
+    <!-- Right Block (Verified Execution Node) -->
+    <path d="M270 120 L180 70 L180 310 L270 260 Z" fill="url(#emeraldAccent)" fill-opacity="0.85"/>
+    <path d="M270 120 L180 70 L210 50 L300 100 Z" fill="#00e5a3" fill-opacity="0.4"/>
+
+    <!-- Center Verification Axis Spine -->
+    <rect x="154" y="20" width="12" height="340" rx="6" fill="url(#spineAccent)"/>
+
+    <!-- Precision Gateway Nodes -->
+    <circle cx="160" cy="70" r="12" fill="#0d111a" stroke="#00f2fe" stroke-width="4"/>
+    <circle cx="160" cy="190" r="14" fill="#0d111a" stroke="#00e5a3" stroke-width="4"/>
+    <circle cx="160" cy="310" r="12" fill="#0d111a" stroke="#38ef7d" stroke-width="4"/>
+
+    <!-- Relational Flow Indicators -->
+    <path d="M14 190 H100 M220 190 H306" stroke="#ffffff" stroke-opacity="0.25" stroke-dasharray="4,4" stroke-width="2"/>
+  </g>
+
+  <!-- Bottom Terminal Status Line -->
+  <g transform="translate(100, 560)">
+    <line x1="0" y1="0" x2="1080" y2="0" stroke="#1e2738" stroke-width="1.5"/>
+    <text x="0" y="32" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" fill="#64748b">$ feimini query --db ./store.db --question "Show top products by revenue"</text>
+    <text x="1080" y="32" font-family="'SF Mono', Menlo, Consolas, monospace" font-size="14" fill="#00e5a3" text-anchor="end">verified in 4.2ms [mode=ro]</text>
+  </g>
+</svg>
