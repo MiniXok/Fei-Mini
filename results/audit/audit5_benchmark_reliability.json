@@ -1,0 +1,44 @@
+{
+  "exhaustive": {
+    "run_times_wall": [
+      0.117,
+      0.1227,
+      0.1257
+    ],
+    "run_times_cpu": [
+      0.1155,
+      0.1215,
+      0.124
+    ],
+    "batch_wall_mean": 0.1218,
+    "batch_wall_std": 0.0036,
+    "batch_cpu_mean": 0.1203,
+    "batch_cpu_std": 0.0036,
+    "median_per_task_wall_sec": 0.002743,
+    "p90_per_task_wall_sec": 0.002973,
+    "mean_per_task_dispersion_cv": 0.074
+  },
+  "random": {
+    "run_times_wall": [
+      0.1997,
+      0.2048,
+      0.2122
+    ],
+    "run_times_cpu": [
+      0.1978,
+      0.2037,
+      0.2108
+    ],
+    "batch_wall_mean": 0.2056,
+    "batch_wall_std": 0.0051,
+    "batch_cpu_mean": 0.2041,
+    "batch_cpu_std": 0.0053,
+    "median_per_task_wall_sec": 0.004468,
+    "p90_per_task_wall_sec": 0.004922,
+    "mean_per_task_dispersion_cv": 0.0659
+  },
+  "interpreter_baseline": {
+    "median_sec": 6.3e-05,
+    "mean_sec": 8.1e-05
+  }
+}

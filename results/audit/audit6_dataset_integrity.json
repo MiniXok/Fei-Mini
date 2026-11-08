@@ -1,0 +1,18 @@
+{
+  "manifest_valid": true,
+  "manifest_hash": "754a088a07f31137f34b8447f766d675c156897f2f6636def15c80ccdd3515b5",
+  "train_families": [
+    "ecommerce",
+    "school",
+    "logistics"
+  ],
+  "test_families": [
+    "finance",
+    "hospital"
+  ],
+  "train_count": 1000,
+  "dev_count": 200,
+  "test_count": 200,
+  "train_test_overlap_count": 0,
+  "dev_test_overlap_count": 0
+}

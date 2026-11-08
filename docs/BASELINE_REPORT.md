@@ -38,16 +38,26 @@ This report characterizes the baseline computational tractability of discovering
 
 ### Overall Performance Matrix
 
-| Solver | Budget | Example Solve % | Generalization % | False Acc % | Avg Executed (Solved) | Avg CPU Time (Solved) |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Exhaustive** | 32 | 16.0% | 16.0% | 0.0% | 2.75 | 0.0002 s |
-| **Exhaustive** | 128 | 25.0% | 24.0% | 1.0% | 30.88 | 0.0008 s |
-| **Exhaustive** | 512 | 26.0% | 25.0% | 1.0% | 47.81 | 0.0012 s |
-| **Exhaustive** | 2048 | **33.0%** | **32.0%** | **1.0%** | **311.67** | **0.0092 s** |
-| **Random** | 32 | 14.0% | 14.0% | 0.0% | 6.93 | 0.0003 s |
-| **Random** | 128 | 19.0% | 18.0% | 1.0% | 27.32 | 0.0014 s |
-| **Random** | 512 | 22.0% | 21.0% | 1.0% | 48.91 | 0.0021 s |
-| **Random** | 2048 | 29.0% | 28.0% | 1.0% | 302.55 | 0.0127 s |
+| Solver | Budget | Example Solve % | Generalization % | False Acc % | Avg Executed (Solved) | Avg Executed (All Tasks)* | Avg CPU Time (Solved) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Exhaustive** | 32 | 16.0% | 16.0% | 0.0% | 2.75 | 27.32 | 0.0002 s |
+| **Exhaustive** | 128 | 25.0% | 24.0% | 1.0% | 30.88 | 103.72 | 0.0008 s |
+| **Exhaustive** | 512 | 26.0% | 25.0% | 1.0% | 47.81 | 391.31 | 0.0012 s |
+| **Exhaustive** | 2048 | **33.0%** | **32.0%** | **1.0%** | **311.67** | **1193.28** | **0.0092 s** |
+| **Random** | 32 | 14.0% | 14.0% | 0.0% | 6.93 | 27.86 | 0.0003 s |
+| **Random** | 128 | 19.0% | 18.0% | 1.0% | 27.32 | 105.95 | 0.0014 s |
+| **Random** | 512 | 22.0% | 21.0% | 1.0% | 48.91 | 399.10 | 0.0021 s |
+| **Random** | 2048 | 29.0% | 28.0% | 1.0% | 302.55 | 1500.84 | 0.0127 s |
+
+*\*Note added in M4.5 Audit: `Avg Executed (Solved)` averages strictly over solved tasks. `Avg Executed (All Tasks)` accounts for budget exhaustion across all 100 evaluated tasks.*
+
+---
+
+### M4.5 Scientific Audit Addendum
+An independent scientific audit (documented in `docs/M4_AUDIT.md` and `docs/audit/`) established that:
+1. **Identifiability:** The 3-example specification is sound; 98% of tasks are uniquely identifiable and false acceptance is minimal (1.0% overall, 3.0% among accepted tasks).
+2. **Grammar Alignment:** 73% of gold ASTs were unrepresentable by the initial exhaustive enumerator due to parameter mismatches (`limit=4`, aggregation aliases `as_col`, 3-column projections). Solvers effectively solved 33 out of ~35 representable tasks.
+3. **Verdict:** Conditional Pass. M5 may proceed once grammar parameters are unified.
 
 ---
 
